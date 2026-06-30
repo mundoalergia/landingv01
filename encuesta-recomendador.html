@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encuentra tus productos — Mundo Alergia</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="encuesta-recomendador-data.js"></script>
+<style>
+  :root {
+    --verde:  #1A1512;
+    --carbon: #9A5353;
+    --terra:  #E2775F;
+    --niebla: #FFF3E9;
+    --crema:  #FAF4EF;
+    --blanco: #FFFFFF;
+    --error:  #C0392B;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--crema);
+    color: var(--verde);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAV */
+  nav {
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(26,21,18,.1);
+    background: var(--blanco);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: var(--verde);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--terra); }
+  .nav-back {
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    color: var(--carbon);
+    text-decoration: none;
+    text-transform: uppercase;
+    opacity: .7;
+  }
+  .nav-back:hover { opacity: 1; }
+
+  /* CONTENEDOR PRINCIPAL */
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* BARRA DE PROGRESO */
+  .progress-wrap {
+    width: 100%;
+    max-width: 640px;
+    margin-bottom: 2rem;
+  }
+  .progress-label {
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    margin-bottom: .5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-bar {
+    height: 3px;
+    background: var(--niebla);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--terra);
+    border-radius: 2px;
+    transition: width .4s ease;
+  }
+
+  /* TARJETA DE PREGUNTA */
+  .survey-card {
+    width: 100%;
+    max-width: 640px;
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 2px 24px rgba(26,21,18,.06);
+    animation: fadeUp .35s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: .5rem;
+  }
+  .q-hint {
+    font-size: .8rem;
+    color: var(--carbon);
+    margin-bottom: 1.8rem;
+    line-height: 1.5;
+  }
+
+  /* OPCIONES */
+  .options-grid {
+    display: grid;
+    gap: .75rem;
+  }
+  .option-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border: 1.5px solid var(--niebla);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s, transform .15s;
+    user-select: none;
+    background: var(--blanco);
+  }
+  .option-card:hover {
+    border-color: var(--carbon);
+    background: rgba(26,21,18,.02);
+  }
+  .option-card.selected {
+    border-color: var(--terra);
+    background: rgba(226,119,95,.07);
+  }
+  .option-card:active { transform: scale(.985); }
+  .opt-emoji {
+    font-size: 1.4rem;
+    width: 2rem;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .opt-label {
+    font-size: .9rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--verde);
+  }
+
+  /* TEXTAREA */
+  .survey-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: .9rem 1rem;
+    border: 1.5px solid var(--niebla);
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .9rem;
+    color: var(--verde);
+    background: var(--blanco);
+    resize: vertical;
+    transition: border-color .2s;
+    margin-bottom: 1rem;
+  }
+  .survey-textarea:focus {
+    outline: none;
+    border-color: var(--terra);
+  }
+
+  /* BOTONES DE NAVEGACIÓN */
+  .nav-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.8rem;
+    gap: 1rem;
+  }
+  .btn-back {
+    font-size: .8rem;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: .5rem 0;
+    opacity: .7;
+    transition: opacity .2s;
+  }
+  .btn-back:hover { opacity: 1; }
+  .btn-back:disabled { opacity: .3; cursor: default; }
+  .btn-next {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--blanco);
+    background: var(--terra);
+    border: none;
+    border-radius: 6px;
+    padding: .8rem 2rem;
+    cursor: pointer;
+    transition: background .2s, transform .15s;
+    display: none;
+  }
+  .btn-next.visible { display: block; }
+  .btn-next:hover { background: #c46b49; }
+  .btn-next:active { transform: scale(.97); }
+
+  /* MULTI HINT */
+  .multi-hint {
+    font-size: .72rem;
+    color: var(--carbon);
+    margin-bottom: 1rem;
+    letter-spacing: .03em;
+  }
+
+  /* PANTALLA DE RESULTADO */
+  .result-card {
+    width: 100%;
+    max-width: 640px;
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 2px 24px rgba(26,21,18,.06);
+    animation: fadeUp .4s ease both;
+    display: none;
+  }
+  .result-card.visible { display: block; }
+  .result-tag {
+    display: inline-block;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    background: rgba(226,119,95,.1);
+    border-radius: 4px;
+    padding: .25rem .65rem;
+    margin-bottom: 1.2rem;
+  }
+  .result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+  .result-intro {
+    font-size: .88rem;
+    color: var(--carbon);
+    line-height: 1.7;
+    margin-bottom: 1.8rem;
+    border-left: 3px solid var(--niebla);
+    padding-left: 1rem;
+  }
+  .result-cats-title {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    margin-bottom: 1rem;
+  }
+  .result-cats {
+    display: grid;
+    gap: .6rem;
+    margin-bottom: 2rem;
+  }
+  .result-cat {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .9rem 1.1rem;
+    background: var(--crema);
+    border-radius: 8px;
+  }
+  .result-cat-badge {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .2rem .5rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: .1rem;
+  }
+  .badge-priority { background: rgba(226,119,95,.15); color: var(--terra); }
+  .badge-complement { background: rgba(84,94,80,.1); color: var(--carbon); }
+  .result-cat-body h4 { font-size: .9rem; font-weight: 600; margin-bottom: .2rem; }
+  .result-cat-body p  { font-size: .78rem; color: var(--carbon); line-height: 1.45; }
+
+  /* EMAIL CAPTURE */
+  .email-section {
+    border-top: 1px solid var(--niebla);
+    padding-top: 1.8rem;
+    margin-top: .5rem;
+  }
+  .email-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    margin-bottom: .4rem;
+  }
+  .email-hint { font-size: .8rem; color: var(--carbon); margin-bottom: 1.2rem; }
+  .email-form { display: flex; gap: .6rem; flex-wrap: wrap; }
+  .email-input {
+    flex: 1;
+    min-width: 200px;
+    padding: .75rem 1rem;
+    border: 1.5px solid var(--niebla);
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .88rem;
+    color: var(--verde);
+    background: var(--blanco);
+    transition: border-color .2s;
+  }
+  .email-input:focus { outline: none; border-color: var(--terra); }
+  .email-submit {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--blanco);
+    background: var(--verde);
+    border: none;
+    border-radius: 6px;
+    padding: .75rem 1.6rem;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+  }
+  .email-submit:hover { background: var(--carbon); }
+  .email-ok { color: var(--terra); font-size: .85rem; font-weight: 500; display: none; margin-top: .75rem; }
+  .email-legal { font-size: .68rem; color: var(--carbon); opacity: .7; margin-top: .75rem; line-height: 1.5; }
+
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.2rem; }
+    .survey-card, .result-card { padding: 1.8rem 1.4rem; }
+    .q-title { font-size: 1.5rem; }
+    .result-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">OXÍGENO <span>·</span> Mundo Alergia</a>
+  <a href="index.html" class="nav-back">← Volver</a>
+</nav>
+
+<main>
+  <!-- BARRA DE PROGRESO -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span>Perfil de productos</span>
+      <span id="progressText">Pregunta 1</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- TARJETA DE PREGUNTA -->
+  <div class="survey-card" id="surveyCard">
+    <div class="q-title" id="qTitle"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="multi-hint" id="multiHint" style="display:none">Puedes marcar varias opciones</div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <textarea class="survey-textarea" id="surveyTextarea" style="display:none" rows="4"></textarea>
+    <div class="nav-buttons">
+      <button class="btn-back" id="btnBack" onclick="goBack()">← Atrás</button>
+      <button class="btn-next visible" id="btnNext" onclick="advanceMulti()">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="result-card" id="resultCard">
+    <div class="result-tag">Tu perfil de productos</div>
+    <div class="result-title">Esto es lo que creemos que puede ayudarte</div>
+    <div class="result-intro">
+      Todavía estamos preparando el catálogo para que todo esté a punto.
+      En breve tendremos todo listo para que puedas encontrar exactamente lo que necesitas.<br><br>
+      Mientras tanto, con lo que nos has contado, creemos que te puede interesar:
+    </div>
+    <div class="result-cats-title">Productos recomendados para tu perfil</div>
+    <div class="result-cats" id="resultCats"></div>
+
+    <div class="email-section">
+      <div class="email-title">Avísame cuando esté listo</div>
+      <div class="email-hint">Te escribimos en cuanto el catálogo esté disponible con tus categorías prioritarias.</div>
+      <form class="email-form" id="emailForm" onsubmit="submitEmail(event)">
+        <input type="hidden" name="_subject" value="Lista de espera recomendador — Mundo Alergia">
+        <input type="hidden" name="perfil" id="hPerfil">
+        <input type="hidden" name="sintoma" id="hSintoma">
+        <input type="hidden" name="alergeno" id="hAlergeno">
+        <input type="hidden" name="categorias" id="hCategorias">
+        <input type="email" name="email" class="email-input" id="emailInput" placeholder="Tu correo electrónico" required>
+        <button type="submit" class="email-submit">Apuntarme</button>
+      </form>
+      <div class="email-ok" id="emailOk">✓ ¡Anotado! Te escribimos en cuanto esté disponible.</div>
+      <div class="email-legal">Al enviar, aceptas recibir comunicaciones de Mundo Alergia relacionadas con el catálogo.
+        Sin spam. Puedes darte de baja en cualquier momento.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ─── MOTOR DE ENCUESTA ────────────────────────────────────────────────────────
+const data     = RECOMENDADOR_DATA;
+const questions = data.questions;
+const totalQ   = Object.keys(questions).length;
+
+let history  = [];   // stack de IDs de pregunta visitados
+let answers  = {};   // { questionId: "optionId" | ["optionId",...] }
+let currentId = data.start;
+
+// Determina si la persona busca para un tercero (hijo/a)
+function isThirdPerson() {
+  return answers.q_perfil === 'pediatrico';
+}
+
+// Resuelve el next de una pregunta
+function resolveNext(q) {
+  const next = q.next;
+  if (typeof next === 'string') return next;
+  if (next._type === 'conditional') {
+    const basedOn = answers[next._based_on];
+    const key = Array.isArray(basedOn) ? basedOn[0] : basedOn;
+    return next[key] || next._default || '_end';
+  }
+  return '_end';
+}
+
+// Renderiza la pregunta actual
+function render() {
+  const q = questions[currentId];
+  if (!q) { showResult(); return; }
+
+  const isMulti     = q.type === 'multi';
+  const isTextarea  = q.type === 'textarea';
+  const thirdPerson = isThirdPerson() && currentId !== 'q_perfil';
+
+  // Títulos
+  document.getElementById('qTitle').textContent =
+    (thirdPerson && q.title_3p) ? q.title_3p : q.title;
+  const hintEl = document.getElementById('qHint');
+  if (q.hint) { hintEl.textContent = q.hint; hintEl.style.display = ''; }
+  else { hintEl.style.display = 'none'; }
+
+  // Multi hint
+  document.getElementById('multiHint').style.display = isMulti ? '' : 'none';
+
+  // Textarea vs opciones
+  const grid     = document.getElementById('optionsGrid');
+  const textarea = document.getElementById('surveyTextarea');
+  const btnNext  = document.getElementById('btnNext');
+
+  if (isTextarea) {
+    grid.innerHTML = '';
+    textarea.style.display = '';
+    textarea.placeholder = q.placeholder || '';
+    textarea.maxLength = q.maxlength || 9999;
+    textarea.value = answers[currentId] || '';
+    btnNext.classList.add('visible');
+  } else {
+    textarea.style.display = 'none';
+    grid.innerHTML = '';
+    const selected = answers[currentId]
+      ? (Array.isArray(answers[currentId]) ? answers[currentId] : [answers[currentId]])
+      : [];
+
+    q.options.forEach(opt => {
+      const label = (thirdPerson && opt.label_3p) ? opt.label_3p : opt.label;
+      const div = document.createElement('div');
+      div.className = 'option-card' + (selected.includes(opt.id) ? ' selected' : '');
+      div.innerHTML = `<span class="opt-emoji">${opt.emoji}</span><span class="opt-label">${label}</span>`;
+      div.addEventListener('click', () => selectOption(opt));
+      grid.appendChild(div);
+    });
+
+    if (isMulti) {
+      const hasSelection = selected.length > 0;
+      if (hasSelection) btnNext.classList.add('visible');
+      else btnNext.classList.remove('visible');
+    } else {
+      btnNext.classList.remove('visible');
+    }
+  }
+
+  // Botón atrás
+  document.getElementById('btnBack').disabled = history.length === 0;
+
+  // Progreso
+  const step = history.length + 1;
+  const est  = Math.max(totalQ, step + 1);
+  const pct  = Math.min(Math.round((history.length / est) * 100), 90);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Pregunta ${step}`;
+
+  // Animar tarjeta
+  const card = document.getElementById('surveyCard');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'fadeUp .35s ease both';
+}
+
+function selectOption(opt) {
+  const q = questions[currentId];
+  const isMulti = q.type === 'multi';
+
+  if (isMulti) {
+    let sel = Array.isArray(answers[currentId]) ? [...answers[currentId]] : [];
+    if (opt.exclusive) {
+      sel = sel.includes(opt.id) ? [] : [opt.id];
+    } else {
+      // Quitar 'nada' (exclusive) si existía
+      sel = sel.filter(id => {
+        const o = q.options.find(o => o.id === id);
+        return !o || !o.exclusive;
+      });
+      if (sel.includes(opt.id)) sel = sel.filter(id => id !== opt.id);
+      else sel.push(opt.id);
+    }
+    answers[currentId] = sel;
+    render();
+    const btnNext = document.getElementById('btnNext');
+    if (sel.length > 0) btnNext.classList.add('visible');
+    else btnNext.classList.remove('visible');
+  } else {
+    answers[currentId] = opt.id;
+    advance();
+  }
+}
+
+function advanceMulti() {
+  const q = questions[currentId];
+  if (q.type === 'textarea') {
+    answers[currentId] = document.getElementById('surveyTextarea').value.trim();
+  }
+  advance();
+}
+
+function advance() {
+  const q = questions[currentId];
+  const nextId = resolveNext(q);
+  history.push(currentId);
+  if (nextId === '_end') { showResult(); return; }
+  currentId = nextId;
+  render();
+}
+
+function goBack() {
+  if (history.length === 0) return;
+  currentId = history.pop();
+  render();
+}
+
+// ─── SCORING ──────────────────────────────────────────────────────────────────
+function calcularRecomendaciones() {
+  const sintoma  = answers.q_sintoma;
+  const alergeno = answers.q_alergeno;
+  const perfil   = answers.q_perfil;
+  const mascota  = answers.q_mascota;
+  const usa      = Array.isArray(answers.q_usa) ? answers.q_usa : (answers.q_usa ? [answers.q_usa] : []);
+  const humedad  = answers.q_humedad;
+
+  // Construir set de todos los códigos de respuesta activos
+  const codes = new Set();
+  if (sintoma)  codes.add('sintoma:'  + sintoma);
+  if (alergeno) codes.add('alergeno:' + alergeno);
+  if (perfil)   codes.add('perfil:'   + perfil);
+  if (mascota)  codes.add('mascota:'  + mascota);
+  usa.forEach(u => codes.add('usa:' + u));
+  if (humedad)  codes.add('humedad:'  + humedad);
+
+  // Contraindicaciones (fuerzan score a 0)
+  const excluidos = new Set();
+  (data.contraindicaciones || []).forEach(contra => {
+    const match = contra.si.every(cond => answers[cond.pregunta] === cond.valor);
+    if (match) contra.excluir.forEach(id => excluidos.add(id));
+  });
+
+  const scored = data.subcategories.map(sub => {
+    if (excluidos.has(sub.id)) return { ...sub, score: 0 };
+
+    let score = sub.score_base;
+
+    // Perfil (exclusión dura si no coincide)
+    const perfilOk = sub.triggers_perfil.includes(perfil) ||
+                     sub.triggers_perfil.includes('familiar') ||
+                     perfil === 'familiar';
+    if (!perfilOk) return { ...sub, score: 0 };
+
+    // Síntoma
+    const sintomaOk = sintoma && sub.triggers_sintoma.includes(sintoma);
+    if (!sintomaOk) score *= (sub.score_base >= 7 ? 0.5 : 0);
+    if (score === 0) return { ...sub, score: 0 };
+
+    // Alérgeno
+    const wildcard = sub.triggers_alergeno.includes('*');
+    const alergenoOk = wildcard || (alergeno && sub.triggers_alergeno.includes(alergeno));
+    if (!alergenoOk) {
+      const subcatAcceptsUnknown = sub.triggers_alergeno.includes('desconocido');
+      score *= (alergeno === 'desconocido' || subcatAcceptsUnknown) ? 0.8 : 0.6;
+    }
+
+    // Modificadores
+    sub.modificadores.forEach(mod => {
+      if (codes.has(mod.condicion)) score *= mod.factor;
+    });
+
+    return { ...sub, score: Math.min(Math.round(score * 10) / 10, 10) };
+  });
+
+  return scored
+    .filter(s => s.score >= 4)
+    .sort((a, b) => b.score - a.score);
+}
+
+// ─── PANTALLA DE RESULTADO ───────────────────────────────────────────────────
+function showResult() {
+  document.getElementById('surveyCard').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+
+  const resultCard = document.getElementById('resultCard');
+  resultCard.classList.add('visible');
+
+  const recs = calcularRecomendaciones();
+  const priority = recs.filter((_, i) => i < 3 && _.score >= 7);
+  const complement = recs.filter((_, i) => i >= priority.length).slice(0, 4);
+
+  const container = document.getElementById('resultCats');
+  container.innerHTML = '';
+
+  if (priority.length === 0 && complement.length === 0) {
+    container.innerHTML = '<p style="color:var(--carbon);font-size:.85rem;line-height:1.6">Con tu perfil, la consulta con un especialista puede ser el mejor primer paso. Pronto tendremos esa opción disponible.</p>';
+  }
+
+  [...priority, ...complement].forEach((sub, i) => {
+    const isPriority = i < priority.length;
+    const div = document.createElement('div');
+    div.className = 'result-cat';
+    div.innerHTML = `
+      <span class="result-cat-badge ${isPriority ? 'badge-priority' : 'badge-complement'}">
+        ${isPriority ? 'Prioritario' : 'También'}
+      </span>
+      <div class="result-cat-body">
+        <h4>${sub.nombre}</h4>
+        <p>${sub.descripcion}</p>
+      </div>`;
+    container.appendChild(div);
+  });
+
+  // Rellenar campos ocultos del formulario
+  document.getElementById('hPerfil').value    = answers.q_perfil    || '';
+  document.getElementById('hSintoma').value   = answers.q_sintoma   || '';
+  document.getElementById('hAlergeno').value  = answers.q_alergeno  || '';
+  document.getElementById('hCategorias').value = [...priority, ...complement].map(s => s.nombre).join(', ');
+}
+
+async function submitEmail(e) {
+  e.preventDefault();
+  const form = document.getElementById('emailForm');
+  const data = new FormData(form);
+  try {
+    await fetch('https://formspree.io/f/xrevvber', {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' }
+    });
+    form.style.display = 'none';
+    document.getElementById('emailOk').style.display = 'block';
+  } catch(_) {
+    alert('Hubo un problema al enviar. Inténtalo de nuevo.');
+  }
+}
+
+// Arranque
+render();
+</script>
+</body>
+</html>

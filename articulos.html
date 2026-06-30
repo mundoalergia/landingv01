@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Artículos — Mundo Alergia</title>
+  <meta name="description" content="Guías, protocolos y comparativas escritas con criterio clínico para personas con alergias y sensibilidad respiratoria."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --verde:#1A1512;--carbon:#9A5353;--terra:#E2775F;
+      --niebla:#FFF3E9;--crema:#FAF4EF;--borde:#EEE0D6;
+      --texto:#1A1512;--sub:#7A5248;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Montserrat',sans-serif;background:var(--crema);color:var(--texto);-webkit-font-smoothing:antialiased}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;background:rgba(26,21,18,0.97);backdrop-filter:blur(16px)}
+    .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .logo img{width:34px;height:34px;object-fit:contain}
+    .logo-wordmark{display:flex;flex-direction:column;gap:2px}
+    .logo-main{font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.28em;color:white;text-transform:uppercase}
+    .logo-top{font-size:0.5rem;font-weight:400;letter-spacing:0.16em;color:rgba(255,255,255,0.35);text-transform:uppercase}
+    .nav-links{display:flex;align-items:center;gap:30px;list-style:none}
+    .nav-links a{font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);text-decoration:none;transition:color .2s}
+    .nav-links a:hover,.nav-links a.active{color:white}
+    .nav-cta{color:var(--verde)!important;background:var(--terra);padding:8px 18px;border-radius:3px}
+    .nav-cta:hover{background:#c4663e!important}
+
+    /* HEADER */
+    .page-header{background:var(--verde);padding:80px 8% 60px;position:relative;overflow:hidden}
+    .header-bg{position:absolute;inset:0;opacity:0.05;background:radial-gradient(ellipse at 70% 50%,white 0%,transparent 70%)}
+    .page-header .eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--terra);display:block;margin-bottom:12px;position:relative}
+    .page-header h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:300;color:white;line-height:1.1;position:relative}
+    .page-header h1 em{font-style:italic;color:var(--niebla)}
+    .page-header p{font-size:0.9rem;color:rgba(255,255,255,0.5);max-width:520px;margin-top:16px;line-height:1.8;position:relative}
+
+    /* FILTROS */
+    .filtros{background:white;border-bottom:1px solid var(--borde);padding:0 8%;display:flex;gap:8px;overflow-x:auto}
+    .filtro-btn{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--sub);border:none;background:none;padding:16px 4px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+    .filtro-btn.active{color:var(--terra);border-bottom-color:var(--terra)}
+    .filtro-btn:hover{color:var(--carbon)}
+
+    /* GRID */
+    .articulos-section{padding:60px 6% 100px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .featured-row{display:grid;grid-template-columns:1.7fr 1fr;gap:24px;margin-bottom:24px}
+
+    /* CARD */
+    .card{background:white;border-radius:12px;overflow:hidden;border:1px solid var(--borde);display:flex;flex-direction:column;transition:box-shadow .3s,transform .3s;text-decoration:none;color:inherit}
+    .card:hover{box-shadow:0 16px 48px rgba(0,0,0,0.1);transform:translateY(-3px)}
+    .card-img{position:relative;overflow:hidden;background:var(--niebla)}
+    .card.featured .card-img{height:300px}
+    .card:not(.featured) .card-img{height:196px}
+    .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+    .card:hover .card-img img{transform:scale(1.04)}
+    .card-cat{position:absolute;top:14px;left:14px;font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:white;color:var(--carbon);padding:4px 10px;border-radius:20px}
+    .card-body{padding:22px 20px 18px;flex:1;display:flex;flex-direction:column}
+    .card-tag{font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-bottom:8px;display:block}
+    .card-title{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--texto);line-height:1.25;margin-bottom:10px}
+    .card.featured .card-title{font-size:1.5rem}
+    .card:not(.featured) .card-title{font-size:1.1rem}
+    .card-excerpt{font-size:0.78rem;color:var(--sub);line-height:1.7;flex:1;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .card.featured .card-excerpt{-webkit-line-clamp:4}
+    .card-meta{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--borde)}
+    .card-time{font-size:0.65rem;color:var(--sub)}
+    .card-link{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra)}
+
+    /* FOOTER */
+    footer{background:#100D0A;padding:40px 8%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-transform:uppercase}
+    .footer-links{display:flex;gap:24px;list-style:none}
+    .footer-links a{font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:rgba(255,255,255,0.7)}
+    .footer-copy{font-size:0.62rem;color:rgba(255,255,255,0.18)}
+
+    @media(max-width:900px){.featured-row{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.nav-links{display:none}}
+    @media(max-width:600px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">
+    <img src="logo.png" alt="Mundo Alergia"/>
+    <div class="logo-wordmark">
+      <span class="logo-main">Mundo Alergia</span>
+      <span class="logo-top">Seleccionamos. Tú respiras.</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#categorias">Tienda</a></li>
+    <li><a href="index.html#como">Oriéntame</a></li>
+    <li><a href="index.html#club">Club</a></li>
+    <li><a href="articulos.html" class="active">Artículos</a></li>
+    <li><a href="index.html#consultas">Consultas médicas</a></li>
+    <li><a href="index.html#cta" class="nav-cta">Acceso anticipado</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="header-bg"></div>
+  <span class="eyebrow">Contenido con criterio</span>
+  <h1>Saber para<br/><em>elegir mejor.</em></h1>
+  <p>Guías, protocolos y comparativas escritas con rigor clínico. Cada artículo enlaza con los productos que valida.</p>
+</div>
+
+<div class="filtros">
+  <button class="filtro-btn active">Todos</button>
+  <button class="filtro-btn">Respiratorio</button>
+  <button class="filtro-btn">Hogar</button>
+  <button class="filtro-btn">Noche segura</button>
+  <button class="filtro-btn">Guías prácticas</button>
+  <button class="filtro-btn">Temporada</button>
+</div>
+
+<section class="articulos-section">
+
+  <!-- Fila destacada -->
+  <div class="featured-row">
+
+    <a class="card featured" href="articulo-polenes.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1457530378978-8bac673b8062?w=900&q=80" alt="Árboles en flor — temporada de pólenes" loading="lazy"/>
+        <span class="card-cat">Respiratorio · Temporada</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Guía completa</span>
+        <h2 class="card-title">Índice de pólenes: qué significa cada nivel y cómo protegerte esta temporada</h2>
+        <p class="card-excerpt">Los niveles de pólenes en España pueden variar de 10 a más de 3.000 granos/m³. Entender qué mide el índice, qué plantas son las más agresivas en cada mes y cómo actuar según el nivel cambia completamente tu estrategia de prevención.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 6 min de lectura</span>
+          <span class="card-link">Leer →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="articulo-irrigacion.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=600&q=80" alt="Irrigación nasal — higiene respiratoria" loading="lazy"/>
+        <span class="card-cat">Respiratorio</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Guía práctica</span>
+        <h2 class="card-title">Irrigación nasal: cómo hacerla correctamente y por qué los médicos la recomiendan</h2>
+        <p class="card-excerpt">La irrigación nasal con solución salina isotónica es una de las medidas más respaldadas por la evidencia para reducir la carga alergénica en la mucosa nasal. Pero hay detalles de técnica que marcan la diferencia.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 4 min</span>
+          <span class="card-link">Leer →</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Grid de artículos -->
+  <div class="grid">
+
+    <a class="card" href="articulo-purificador.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80" alt="Purificador HEPA en salón" loading="lazy"/>
+        <span class="card-cat">Hogar</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Comparativa</span>
+        <h2 class="card-title">5 errores al elegir un purificador de aire (y cuál sí funciona contra ácaros)</h2>
+        <p class="card-excerpt">HEPA no es HEPA H13. El CADR importa más que el precio. El ruido nocturno arruina el sueño. Te decimos qué mirar — y qué ignorar.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 5 min</span>
+          <span class="card-link">Leer →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="articulo-dormitorio.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=80" alt="Dormitorio limpio sin alérgenos" loading="lazy"/>
+        <span class="card-cat">Noche segura</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Protocolo práctico</span>
+        <h2 class="card-title">El protocolo de 15 minutos para reducir los alérgenos del dormitorio</h2>
+        <p class="card-excerpt">Pasas 8 horas al día en tu dormitorio. Si hay ácaros en el colchón o polvo en las superficies, estás expuesto mientras duermes. Este protocolo lo cambia.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 3 min</span>
+          <span class="card-link">Leer →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="articulo-mascotas.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80" alt="Perro en casa — convivir con mascotas y alergia" loading="lazy"/>
+        <span class="card-cat">Hogar · Mascotas</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Guía práctica</span>
+        <h2 class="card-title">Alergia a mascotas: cómo convivir sin renunciar a tu perro o tu gato</h2>
+        <p class="card-excerpt">El alérgeno del gato (Fel d 1) no está en el pelo — está en la saliva y en las glándulas sebáceas. Entender esto cambia por completo las medidas que tomas en casa.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 5 min</span>
+          <span class="card-link">Leer →</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="articulo-polenes.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80" alt="Niño en el exterior — alergia estacional" loading="lazy"/>
+        <span class="card-cat">Respiratorio · Infantil</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Para familias</span>
+        <h2 class="card-title">Asma infantil y alergia: las preguntas que más hacen los padres en consulta</h2>
+        <p class="card-excerpt">¿Es lo mismo asma que alergia? ¿La cámara espaciadora es solo para niños pequeños? ¿El deporte empeora el asma? Respondemos las dudas más frecuentes.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 7 min</span>
+          <span class="card-link">Próximamente</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="articulo-dormitorio.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Sensor de calidad del aire en casa" loading="lazy"/>
+        <span class="card-cat">Hogar · Tecnología</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Análisis</span>
+        <h2 class="card-title">Cómo medir la calidad del aire en casa (y qué hacer cuando los niveles suben)</h2>
+        <p class="card-excerpt">Un sensor de CO₂ y partículas PM2.5 puede decirte cuándo ventitar, cuándo encender el purificador y si tu hogar es realmente saludable. Te explicamos qué mirar.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 4 min</span>
+          <span class="card-link">Próximamente</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="articulo-irrigacion.html">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1505693314120-0d443867891c?w=600&q=80" alt="Rutina matinal sin alérgenos" loading="lazy"/>
+        <span class="card-cat">Guía práctica</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Rutinas</span>
+        <h2 class="card-title">La rutina matinal del alérgico: 10 minutos que marcan el resto del día</h2>
+        <p class="card-excerpt">Airear la habitación, irrigación nasal, revisar el índice de pólenes antes de salir. Una rutina simple que reduce la carga de exposición en las horas más críticas del día.</p>
+        <div class="card-meta">
+          <span class="card-time">⏱ 3 min</span>
+          <span class="card-link">Próximamente</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">Mundo Alergia</span>
+  <ul class="footer-links">
+    <li><a href="index.html#categorias">Tienda</a></li>
+    <li><a href="index.html#club">Club</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="index.html#consultas">Consultas médicas</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 Mundo Alergia · mundoalergia.es</span>
+</footer>
+
+</body>
+</html>

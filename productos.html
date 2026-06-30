@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<!--
+  ═══════════════════════════════════════════════════════════════════════════════
+  MUNDO ALERGIA — Listado de productos por categoría (MVP estático)
+  ═══════════════════════════════════════════════════════════════════════════════
+
+  MIGRACIÓN A SHOPIFY / NEXT.JS
+  ───────────────────────────────────────────────────────────────────────────────
+  Este archivo es el equivalente estático de una página de colección en Shopify.
+
+  ESTRUCTURA EN NEXT.JS (App Router):
+    app/
+      collections/
+        [handle]/
+          page.jsx        ← este HTML como server component
+          loading.jsx     ← skeleton mientras carga
+          not-found.jsx   ← si el handle no existe
+
+  DATOS:
+    Los productos se obtienen de Shopify Storefront API en getStaticProps o
+    directamente en el server component (fetch en RSC):
+
+      const COLLECTION_QUERY = `
+        query CollectionByHandle($handle: String!) {
+          collection(handle: $handle) {
+            title
+            description
+            products(first: 50, filters: $filters) {
+              edges {
+                node {
+                  id
+                  title
+                  handle
+                  productType          ← subcategoría (filtro de tabs)
+                  priceRange { minVariantPrice { amount } }
+                  images(first:1) { edges { node { url } } }
+                  metafields(identifiers: [{namespace:"specs", key:"*"}]) { ... }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+  FILTROS POR SUBCATEGORÍA:
+    En Shopify se implementan como:
+      - product.productType === subcategoria   (más simple)
+      - tags que incluyan el slug              (más flexible)
+      - Shopify Filters API en la URL          (nativo Shopify)
+    La URL con filtro quedaría: /collections/nasal-respiratorio?tipo=irrigadores-nasales
+
+  PARÁMETRO DE URL:
+    ?cat=nasal-respiratorio  →  collection.handle en Shopify
+    ?sub=irrigadores-nasales →  product.productType en Shopify
+
+  PRECIOS CLUB:
+    Implementar como variante con tag "club" o metafield "precio_club".
+    En Shopify: customer.tags.includes("club") → mostrar precio especial.
+
+  ESTADO "PRÓXIMAMENTE":
+    product.availableForSale = false  →  mostrar badge + botón deshabilitado.
+    Shopify gestiona esto con inventory management.
+
+  ═══════════════════════════════════════════════════════════════════════════════
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productos — Mundo Alergia</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="productos-data.js"></script>
+<style>
+  :root {
+    --verde:  #1A1512;
+    --carbon: #9A5353;
+    --terra:  #E2775F;
+    --niebla: #FFF3E9;
+    --crema:  #FAF4EF;
+    --blanco: #FFFFFF;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--crema);
+    color: var(--verde);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--blanco);
+    border-bottom: 1px solid rgba(26,21,18,.08);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: var(--verde);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .nav-logo span { color: var(--terra); }
+  .nav-links {
+    display: flex;
+    gap: 1.8rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--verde); }
+  .nav-cta {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--blanco) !important;
+    background: var(--terra);
+    padding: .45rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background .2s;
+  }
+  .nav-cta:hover { background: #c46b49 !important; }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    nav { padding: 0 1.2rem; }
+  }
+
+  /* ── HERO DE CATEGORÍA ── */
+  .cat-hero {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .cat-hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+  }
+  .cat-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,21,18,.75) 0%, rgba(26,21,18,.25) 100%);
+  }
+  .cat-hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem 2.5rem;
+    width: 100%;
+  }
+  .cat-hero-eyebrow {
+    font-size: .68rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.65);
+    margin-bottom: .4rem;
+  }
+  .cat-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: var(--blanco);
+    line-height: 1.15;
+  }
+  .cat-hero-desc {
+    font-size: .82rem;
+    color: rgba(255,255,255,.75);
+    margin-top: .5rem;
+    max-width: 520px;
+    line-height: 1.6;
+  }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: .9rem 2.5rem;
+    font-size: .72rem;
+    color: var(--carbon);
+    border-bottom: 1px solid rgba(26,21,18,.06);
+    background: var(--blanco);
+  }
+  .breadcrumb a {
+    color: var(--carbon);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .breadcrumb a:hover { color: var(--terra); }
+  .breadcrumb span { margin: 0 .4rem; opacity: .5; }
+
+  /* ── LAYOUT PRINCIPAL ── */
+  .page-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 2rem 5rem;
+  }
+
+  /* ── FILTROS DE SUBCATEGORÍA ── */
+  /* En Shopify/Next.js: cada tab genera un ?tipo= en la URL y se ejecuta
+     una nueva query a la Storefront API filtrando por productType           */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: 2.2rem;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: .68rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    margin-right: .5rem;
+    flex-shrink: 0;
+  }
+  .filter-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .72rem;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: .4rem .9rem;
+    border-radius: 20px;
+    border: 1.5px solid var(--niebla);
+    background: var(--blanco);
+    color: var(--carbon);
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--carbon); color: var(--verde); }
+  .filter-btn.active {
+    background: var(--verde);
+    border-color: var(--verde);
+    color: var(--blanco);
+  }
+
+  /* ── CONTEO DE RESULTADOS ── */
+  .results-count {
+    font-size: .75rem;
+    color: var(--carbon);
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── GRID DE PRODUCTOS ── */
+  /* En Next.js: <ProductCard> component con props del producto             */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .products-grid { grid-template-columns: 1fr; } }
+
+  /* ── TARJETA DE PRODUCTO ── */
+  .product-card {
+    background: var(--blanco);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 12px rgba(26,21,18,.06);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow .25s, transform .25s;
+  }
+  .product-card:hover {
+    box-shadow: 0 4px 24px rgba(26,21,18,.1);
+    transform: translateY(-2px);
+  }
+
+  /* Imagen */
+  .product-img-wrap {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--niebla);
+  }
+  .product-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+  }
+  .product-card:hover .product-img-wrap img { transform: scale(1.04); }
+
+  /* Badge "Próximamente" */
+  .badge-pronto {
+    position: absolute;
+    top: .75rem;
+    left: .75rem;
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    background: rgba(26,21,18,.75);
+    color: var(--blanco);
+    padding: .25rem .6rem;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+  }
+  /* Badge "Destacado" */
+  .badge-star {
+    position: absolute;
+    top: .75rem;
+    right: .75rem;
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    background: var(--terra);
+    color: var(--blanco);
+    padding: .25rem .6rem;
+    border-radius: 4px;
+  }
+
+  /* Cuerpo */
+  .product-body {
+    padding: 1.2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+  .product-sub {
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+  .product-brand {
+    font-size: .7rem;
+    color: var(--carbon);
+    opacity: .7;
+  }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--verde);
+    margin-top: .1rem;
+  }
+  .product-desc {
+    font-size: .78rem;
+    color: var(--carbon);
+    line-height: 1.55;
+    margin-top: .3rem;
+    flex: 1;
+  }
+
+  /* Specs */
+  .product-specs {
+    margin-top: .8rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .3rem .5rem;
+  }
+  .spec-item {
+    font-size: .68rem;
+    color: var(--carbon);
+    line-height: 1.3;
+  }
+  .spec-item strong {
+    color: var(--verde);
+    font-weight: 600;
+    display: block;
+    font-size: .65rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  /* Footer de la card */
+  .product-footer {
+    padding: 1rem 1.2rem;
+    border-top: 1px solid rgba(26,21,18,.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+  }
+  .product-price-wrap {}
+  .price-regular {
+    font-size: .78rem;
+    color: var(--carbon);
+    text-decoration: line-through;
+    display: block;
+    line-height: 1;
+  }
+  .price-main {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--verde);
+    line-height: 1;
+  }
+  .price-club-label {
+    font-size: .6rem;
+    color: var(--terra);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* CTA de producto */
+  /* En Shopify/Next.js: <AddToCartButton> del Hydrogen SDK o botón que
+     redirige al product page: /products/[handle]                          */
+  .btn-pronto {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    background: var(--crema);
+    border: 1.5px solid var(--niebla);
+    border-radius: 6px;
+    padding: .55rem 1rem;
+    cursor: default;
+    white-space: nowrap;
+    opacity: .85;
+    flex-shrink: 0;
+  }
+
+  /* Estado vacío */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--carbon);
+  }
+  .empty-state p { font-size: .9rem; line-height: 1.7; }
+
+  /* ── BANNER MVP ── */
+  .mvp-banner {
+    background: rgba(226,119,95,.08);
+    border: 1px solid rgba(226,119,95,.2);
+    border-radius: 8px;
+    padding: .9rem 1.2rem;
+    margin-bottom: 2rem;
+    font-size: .8rem;
+    color: var(--carbon);
+    line-height: 1.55;
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+  }
+  .mvp-banner span { font-size: 1.1rem; flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    .cat-hero { height: 200px; }
+    .cat-hero-content { padding: 1.5rem; }
+    .cat-hero-title { font-size: 1.8rem; }
+    .page-body { padding: 1.5rem 1rem 4rem; }
+    .breadcrumb { padding: .8rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">OXÍGENO <span>·</span> Mundo Alergia</a>
+  <ul class="nav-links">
+    <li><a href="index.html#categorias" class="active">Tienda</a></li>
+    <li><a href="index.html#como">Oriéntame</a></li>
+    <li><a href="index.html#club">Club</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="index.html#consultas">Consultas</a></li>
+    <li><a href="index.html#cta" class="nav-cta">Acceso anticipado</a></li>
+  </ul>
+</nav>
+
+<!-- HERO (relleno por JS) -->
+<div class="cat-hero" id="catHero">
+  <img class="cat-hero-img" id="heroImg" src="" alt="">
+  <div class="cat-hero-overlay"></div>
+  <div class="cat-hero-content">
+    <div class="cat-hero-eyebrow" id="heroEyebrow"></div>
+    <h1 class="cat-hero-title" id="heroTitle">Cargando categoría…</h1>
+    <p class="cat-hero-desc" id="heroDesc"></p>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" id="breadcrumb">
+  <!-- En Next.js: <Breadcrumb> component con la ruta dinámica -->
+  <a href="index.html">Inicio</a>
+  <span>›</span>
+  <a href="index.html#categorias">Tienda</a>
+  <span>›</span>
+  <span id="breadcrumbCat">Categoría</span>
+</div>
+
+<!-- CUERPO -->
+<div class="page-body">
+
+  <!-- Banner MVP -->
+  <div class="mvp-banner">
+    <span>🛠</span>
+    <div>
+      <strong>Catálogo en preparación.</strong> Estos son algunos de los productos que incluiremos.
+      Pronto podrás comprarlos directamente aquí. Si quieres que te avisemos,
+      <a href="encuesta-recomendador.html" style="color:var(--terra);font-weight:600;">completa el perfil</a>
+      y déjanos tu email al final.
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <!-- En Shopify/Next.js: <FilterBar> que actualiza searchParams y re-fetcha productos -->
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-label">Filtrar:</span>
+    <!-- Botones generados por JS -->
+  </div>
+
+  <div class="results-count" id="resultsCount"></div>
+
+  <!-- GRID -->
+  <div class="products-grid" id="productsGrid"></div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// MOTOR DE LISTADO
+//
+// MIGRACIÓN NEXT.JS:
+// Este bloque <script> se convierte en el server component + client components:
+//   - La query de URL se lee con useSearchParams() (client) o
+//     con searchParams prop del page.jsx (server)
+//   - La lógica de filtrado se hace en el servidor con la Storefront API query
+//   - El estado del filtro activo se maneja con useOptimistic() o router.push()
+// ─────────────────────────────────────────────────────────────────────────────
+
+const data = PRODUCTOS_DATA;
+
+// Leer parámetros de URL
+// En Next.js: const { handle } = await params;  const { tipo } = searchParams;
+const params     = new URLSearchParams(window.location.search);
+const catSlug    = params.get('cat') || Object.keys(data.categorias)[0];
+const subActiva  = params.get('sub') || null; // filtro de subcategoría
+
+const categoria  = data.categorias[catSlug];
+const subcats    = categoria ? categoria.subcategorias : [];
+
+// Si la categoría no existe, redirigir
+if (!categoria) {
+  document.body.innerHTML = '<div style="text-align:center;padding:4rem;font-family:Montserrat,sans-serif;"><p>Categoría no encontrada. <a href="index.html#categorias" style="color:#E2775F">Volver a la tienda</a></p></div>';
+  throw new Error('Categoría no encontrada: ' + catSlug);
+}
+
+// Estado del filtro activo (client-side)
+let filtroActivo = subActiva;
+
+// ── RENDER HERO ──────────────────────────────────────────────────────────────
+document.getElementById('heroImg').src     = categoria.imagen;
+document.getElementById('heroImg').alt     = categoria.titulo;
+document.getElementById('heroEyebrow').textContent = categoria.eyebrow;
+document.getElementById('heroTitle').textContent   = categoria.titulo;
+document.getElementById('heroDesc').textContent    = categoria.descripcion;
+document.getElementById('breadcrumbCat').textContent = categoria.titulo;
+document.title = categoria.titulo + ' — Mundo Alergia';
+
+// ── RENDER FILTROS ───────────────────────────────────────────────────────────
+// En Next.js: cada botón hace router.push(`?cat=${catSlug}&sub=${subSlug}`)
+// La URL actualizada re-fetcha con la Storefront API query filtrada
+function renderFiltros() {
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = '<span class="filter-label">Filtrar:</span>';
+
+  // Botón "Todos"
+  const btnAll = document.createElement('button');
+  btnAll.className = 'filter-btn' + (filtroActivo === null ? ' active' : '');
+  btnAll.textContent = 'Todos';
+  btnAll.onclick = () => { filtroActivo = null; renderFiltros(); renderProductos(); };
+  bar.appendChild(btnAll);
+
+  // Botones por subcategoría (solo las que tienen productos en esta categoría)
+  subcats.forEach(subSlug => {
+    const sub     = data.subcategorias[subSlug];
+    if (!sub) return;
+    const tiene   = data.productos.some(p => p.categoria === catSlug && p.subcategoria === subSlug);
+    if (!tiene) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (filtroActivo === subSlug ? ' active' : '');
+    btn.textContent = sub.titulo;
+    btn.onclick = () => {
+      filtroActivo = subSlug;
+      renderFiltros();
+      renderProductos();
+    };
+    bar.appendChild(btn);
+  });
+}
+
+// ── RENDER PRODUCTOS ─────────────────────────────────────────────────────────
+// En Next.js: <ProductCard> component con server-rendered props
+function renderProductos() {
+  const productos = data.productos.filter(p => {
+    if (p.categoria !== catSlug) return false;
+    if (filtroActivo && p.subcategoria !== filtroActivo) return false;
+    return true;
+  });
+
+  // Ordenar: destacados primero
+  productos.sort((a, b) => (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0));
+
+  const grid = document.getElementById('productsGrid');
+  const count = document.getElementById('resultsCount');
+
+  count.textContent = productos.length === 1
+    ? '1 producto'
+    : `${productos.length} productos`;
+
+  if (productos.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <p>No hay productos en esta subcategoría todavía.<br>Estamos incorporando más referencias continuamente.</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = '';
+  productos.forEach(p => {
+    const sub = data.subcategorias[p.subcategoria];
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    // Specs HTML
+    const specsHTML = Object.entries(p.specs || {}).map(([k, v]) =>
+      `<div class="spec-item"><strong>${k}</strong>${v}</div>`
+    ).join('');
+
+    // In Next.js the "data-product-id" would map to product.handle for routing
+    card.setAttribute('data-product-id', p.id);
+
+    card.innerHTML = `
+      <div class="product-img-wrap">
+        <img src="${p.imagen}" alt="${p.nombre}" loading="lazy">
+        ${!p.disponible ? '<span class="badge-pronto">Próximamente</span>' : ''}
+        ${p.destacado ? '<span class="badge-star">★ Destacado</span>' : ''}
+      </div>
+      <div class="product-body">
+        <div class="product-sub">${sub ? sub.titulo : ''}</div>
+        <div class="product-brand">${p.marca}</div>
+        <div class="product-name">${p.nombre}</div>
+        <div class="product-desc">${p.descripcion}</div>
+        ${specsHTML ? `<div class="product-specs">${specsHTML}</div>` : ''}
+      </div>
+      <div class="product-footer">
+        <div class="product-price-wrap">
+          <span class="price-regular">${formatPrice(p.precio)} pvp</span>
+          <span class="price-main">${formatPrice(p.precio_club)}</span>
+          <span class="price-club-label">Precio Club</span>
+        </div>
+        <button class="btn-pronto" disabled title="Disponible próximamente">Próximamente</button>
+      </div>`;
+
+    grid.appendChild(card);
+  });
+}
+
+function formatPrice(n) {
+  return n.toFixed(2).replace('.', ',') + ' €';
+}
+
+// Arranque
+renderFiltros();
+renderProductos();
+</script>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta médica — Mundo Alergia</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="ficha-preconsulta-data.js"></script>
+<style>
+  :root {
+    --verde:  #1A1512;
+    --carbon: #9A5353;
+    --terra:  #E2775F;
+    --niebla: #FFF3E9;
+    --crema:  #FAF4EF;
+    --blanco: #FFFFFF;
+    --alerta: #8B3A2A;
+    --alerta-bg: #FDF0ED;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--crema);
+    color: var(--verde);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav {
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(26,21,18,.1);
+    background: var(--blanco);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: var(--verde);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--terra); }
+  .nav-back {
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    color: var(--carbon);
+    text-decoration: none;
+    text-transform: uppercase;
+    opacity: .7;
+  }
+  .nav-back:hover { opacity: 1; }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* PROGRESO */
+  .progress-wrap {
+    width: 100%;
+    max-width: 660px;
+    margin-bottom: 2rem;
+  }
+  .progress-label {
+    font-size: .7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    margin-bottom: .5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-bar { height: 3px; background: var(--niebla); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--terra); border-radius: 2px; transition: width .4s ease; }
+
+  /* TARJETA */
+  .survey-card {
+    width: 100%;
+    max-width: 660px;
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 2px 24px rgba(26,21,18,.06);
+    animation: fadeUp .35s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-section-tag {
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: .6rem;
+    display: none;
+  }
+  .q-section-tag.visible { display: block; }
+  .q-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: .5rem;
+  }
+  .q-hint {
+    font-size: .8rem;
+    color: var(--carbon);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  .multi-hint {
+    font-size: .72rem;
+    color: var(--carbon);
+    margin-bottom: 1rem;
+    display: none;
+  }
+  .multi-hint.visible { display: block; }
+
+  .options-grid { display: grid; gap: .65rem; }
+  .option-card {
+    display: flex;
+    align-items: flex-start;
+    gap: .9rem;
+    padding: .9rem 1.1rem;
+    border: 1.5px solid var(--niebla);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s, transform .15s;
+    user-select: none;
+    background: var(--blanco);
+  }
+  .option-card:hover { border-color: var(--carbon); background: rgba(26,21,18,.02); }
+  .option-card.selected { border-color: var(--terra); background: rgba(226,119,95,.07); }
+  .option-card:active { transform: scale(.985); }
+  .opt-emoji { font-size: 1.3rem; width: 1.8rem; text-align: center; flex-shrink: 0; padding-top: .05rem; }
+  .opt-label { font-size: .875rem; font-weight: 500; line-height: 1.4; }
+
+  .survey-textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: .9rem 1rem;
+    border: 1.5px solid var(--niebla);
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .9rem;
+    color: var(--verde);
+    background: var(--blanco);
+    resize: vertical;
+    transition: border-color .2s;
+  }
+  .survey-textarea:focus { outline: none; border-color: var(--terra); }
+
+  /* ALERTA CLÍNICA */
+  .alerta-box {
+    background: var(--alerta-bg);
+    border-left: 3px solid var(--alerta);
+    border-radius: 6px;
+    padding: .9rem 1rem;
+    font-size: .82rem;
+    color: var(--alerta);
+    line-height: 1.55;
+    margin-top: 1rem;
+    display: none;
+  }
+  .alerta-box.visible { display: block; }
+
+  /* NAVEGACIÓN */
+  .nav-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.8rem;
+  }
+  .btn-back {
+    font-size: .8rem;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: .5rem 0;
+    opacity: .7;
+    transition: opacity .2s;
+  }
+  .btn-back:hover { opacity: 1; }
+  .btn-back:disabled { opacity: .3; cursor: default; }
+  .btn-next {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--blanco);
+    background: var(--terra);
+    border: none;
+    border-radius: 6px;
+    padding: .8rem 2rem;
+    cursor: pointer;
+    transition: background .2s, transform .15s;
+    display: none;
+  }
+  .btn-next.visible { display: block; }
+  .btn-next:hover { background: #c46b49; }
+
+  /* RESULTADO */
+  .result-card {
+    width: 100%;
+    max-width: 660px;
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 2px 24px rgba(26,21,18,.06);
+    animation: fadeUp .4s ease both;
+    display: none;
+  }
+  .result-card.visible { display: block; }
+
+  .result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: rgba(210,225,224,.5);
+    border-radius: 6px;
+    padding: .4rem .9rem;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--carbon);
+    margin-bottom: 1.4rem;
+  }
+  .result-coming {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: .5rem;
+  }
+  .result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 1.1rem;
+  }
+  .result-spec-card {
+    background: var(--crema);
+    border-radius: 10px;
+    padding: 1.4rem;
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .spec-emoji { font-size: 2rem; flex-shrink: 0; }
+  .spec-titulo { font-size: 1rem; font-weight: 600; margin-bottom: .25rem; }
+  .spec-area {
+    font-size: .78rem;
+    color: var(--terra);
+    font-weight: 600;
+    letter-spacing: .04em;
+    margin-bottom: .4rem;
+    text-transform: uppercase;
+    font-size: .68rem;
+  }
+  .spec-desc { font-size: .82rem; color: var(--carbon); line-height: 1.55; }
+
+  .result-intro {
+    font-size: .87rem;
+    color: var(--carbon);
+    line-height: 1.7;
+    margin-bottom: 1.8rem;
+  }
+
+  /* EMAIL */
+  .email-section {
+    border-top: 1px solid var(--niebla);
+    padding-top: 1.8rem;
+  }
+  .email-title { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; margin-bottom: .4rem; }
+  .email-hint  { font-size: .8rem; color: var(--carbon); margin-bottom: 1.2rem; }
+  .email-form  { display: flex; gap: .6rem; flex-wrap: wrap; }
+  .email-input {
+    flex: 1;
+    min-width: 200px;
+    padding: .75rem 1rem;
+    border: 1.5px solid var(--niebla);
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .88rem;
+    color: var(--verde);
+    background: var(--blanco);
+    transition: border-color .2s;
+  }
+  .email-input:focus { outline: none; border-color: var(--terra); }
+  .email-submit {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--blanco);
+    background: var(--verde);
+    border: none;
+    border-radius: 6px;
+    padding: .75rem 1.6rem;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+  }
+  .email-submit:hover { background: var(--carbon); }
+  .email-ok { color: var(--terra); font-size: .85rem; font-weight: 500; display: none; margin-top: .75rem; }
+  .email-legal { font-size: .68rem; color: var(--carbon); opacity: .7; margin-top: .75rem; line-height: 1.5; }
+
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.2rem; }
+    .survey-card, .result-card { padding: 1.8rem 1.4rem; }
+    .q-title, .result-title { font-size: 1.45rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">OXÍGENO <span>·</span> Mundo Alergia</a>
+  <a href="index.html" class="nav-back">← Volver</a>
+</nav>
+
+<main>
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span>Ficha de preconsulta</span>
+      <span id="progressText">Paso 1</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="survey-card" id="surveyCard">
+    <div class="q-section-tag" id="sectionTag"></div>
+    <div class="q-title" id="qTitle"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="multi-hint" id="multiHint">Puedes marcar varias opciones</div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <textarea class="survey-textarea" id="surveyTextarea" style="display:none" rows="4"></textarea>
+    <div class="alerta-box" id="alertaBox"></div>
+    <div class="nav-buttons">
+      <button class="btn-back" id="btnBack" onclick="goBack()">← Atrás</button>
+      <button class="btn-next" id="btnNext" onclick="advanceNext()">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="result-card" id="resultCard">
+    <div class="result-coming">Próximamente disponible</div>
+    <div class="result-title" id="rTitle">Tu consulta con especialista</div>
+    <div class="result-spec-card" id="rSpecCard"></div>
+    <div class="result-intro" id="rIntro"></div>
+
+    <div class="email-section">
+      <div class="email-title">Avísame cuando esté disponible</div>
+      <div class="email-hint">En cuanto incorporemos a tu especialista, serás de los primeros en poder reservar.</div>
+      <form class="email-form" id="emailForm" onsubmit="submitEmail(event)">
+        <input type="hidden" name="_subject" value="Lista de espera consulta — Mundo Alergia">
+        <input type="hidden" name="tipo_consulta" id="hTipo">
+        <input type="hidden" name="especialista" id="hEspec">
+        <input type="hidden" name="duracion" id="hDuracion">
+        <input type="email" name="email" class="email-input" placeholder="Tu correo electrónico" required>
+        <button type="submit" class="email-submit">Apuntarme</button>
+      </form>
+      <div class="email-ok" id="emailOk">✓ ¡Anotado! Te avisamos en cuanto tu especialista esté disponible.</div>
+      <div class="email-legal">Al enviar, aceptas recibir comunicaciones de Mundo Alergia sobre la disponibilidad de consultas. Sin spam.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ─── SECCIONES (para el tag de contexto visual) ───────────────────────────────
+const SECTIONS = {
+  q_perfil:           null,                  // sin tag — pregunta de arranque
+  q_tipo:             null,                  // sin tag — segunda pregunta de arranque
+  b1_duracion:        'Contexto general',
+  b1_condiciones:     'Contexto general',
+  b1_medicacion:      'Contexto general',
+  b1_antecedentes:    'Contexto general',
+  ra_sintomas:        'Tu consulta',
+  ra_cuando:          'Tu consulta',
+  ra_gravedad:        'Tu consulta',
+  ra_pruebas:         'Tu consulta',
+  rb_sintomas:        'Tu consulta',
+  rb_frecuencia:      'Tu consulta',
+  rb_inhalador:       'Tu consulta',
+  rb_crisis:          'Tu consulta',
+  rb_desencadenantes: 'Tu consulta',
+  rc_reaccion:        'Tu consulta',
+  rc_tiempo:          'Tu consulta',
+  rc_alimento:        'Tu consulta',
+  rc_anafilaxia:      'Tu consulta',
+  rd_lesiones:        'Tu consulta',
+  rd_donde:           'Tu consulta',
+  rd_desencadenantes: 'Tu consulta',
+  re_medicamento:     'Tu consulta',
+  re_sintomas:        'Tu consulta',
+  re_urgencia:        'Tu consulta',
+  rf_insecto:         'Tu consulta',
+  rf_reaccion:        'Tu consulta',
+  rf_adrenalina:      'Tu consulta',
+  rg_edad:            'Sobre el paciente',
+  rg_motivo:          'Sobre el paciente',
+  rg_inicio:          'Sobre el paciente',
+  rg_eccema:          'Sobre el paciente',
+  rg_bronquitis:      'Sobre el paciente',
+  final_nota:         'Último paso',
+};
+
+// ─── MOTOR ────────────────────────────────────────────────────────────────────
+const data      = PRECONSULTA_DATA;
+const questions = data.questions;
+const totalQ    = Object.keys(questions).length;
+
+let history   = [];
+let answers   = {};
+let currentId = data.start;
+
+function isThirdPerson() {
+  // Tercera persona si rellena en nombre de otro (niño, niña o familiar adulto)
+  return answers.q_perfil === 'nino' || answers.q_perfil === 'familiar';
+}
+
+function resolveNext(q) {
+  const next = q.next;
+  if (typeof next === 'string') return next;
+  if (next._type === 'conditional') {
+    const basedOn = answers[next._based_on];
+    const key = Array.isArray(basedOn) ? basedOn[0] : basedOn;
+    return next[key] || next._default || '_end';
+  }
+  return '_end';
+}
+
+function render() {
+  const q = questions[currentId];
+  if (!q) { showResult(); return; }
+
+  const isMulti    = q.type === 'multi';
+  const isTextarea = q.type === 'textarea';
+  // Las preguntas de arranque (quién, qué tipo) siempre en 1ª persona
+  const third = isThirdPerson() && currentId !== 'q_perfil' && currentId !== 'q_tipo';
+
+  // Sección
+  const secTag = document.getElementById('sectionTag');
+  const sec    = SECTIONS[currentId];
+  if (sec) { secTag.textContent = sec; secTag.classList.add('visible'); }
+  else secTag.classList.remove('visible');
+
+  // Título y hint
+  document.getElementById('qTitle').textContent =
+    (third && q.title_3p) ? q.title_3p : q.title;
+  const hintEl = document.getElementById('qHint');
+  if (q.hint) { hintEl.textContent = q.hint; hintEl.style.display = ''; }
+  else hintEl.style.display = 'none';
+
+  // Multi hint
+  const mh = document.getElementById('multiHint');
+  isMulti ? mh.classList.add('visible') : mh.classList.remove('visible');
+
+  // Alerta (reset)
+  const alertaBox = document.getElementById('alertaBox');
+  alertaBox.classList.remove('visible');
+  alertaBox.textContent = '';
+
+  const grid     = document.getElementById('optionsGrid');
+  const textarea = document.getElementById('surveyTextarea');
+  const btnNext  = document.getElementById('btnNext');
+
+  if (isTextarea) {
+    grid.innerHTML = '';
+    textarea.style.display = '';
+    textarea.placeholder = q.placeholder || '';
+    if (q.maxlength) textarea.maxLength = q.maxlength;
+    textarea.value = answers[currentId] || '';
+    btnNext.classList.add('visible');
+  } else {
+    textarea.style.display = 'none';
+    grid.innerHTML = '';
+    const selected = answers[currentId]
+      ? (Array.isArray(answers[currentId]) ? answers[currentId] : [answers[currentId]])
+      : [];
+
+    q.options.forEach(opt => {
+      const label = (third && opt.label_3p) ? opt.label_3p : opt.label;
+      const div   = document.createElement('div');
+      div.className = 'option-card' + (selected.includes(opt.id) ? ' selected' : '');
+      div.innerHTML = `<span class="opt-emoji">${opt.emoji}</span><span class="opt-label">${label}</span>`;
+      div.addEventListener('click', () => selectOption(opt));
+      grid.appendChild(div);
+    });
+
+    if (isMulti) {
+      btnNext.classList[selected.length > 0 ? 'add' : 'remove']('visible');
+    } else {
+      btnNext.classList.remove('visible');
+    }
+  }
+
+  // Botón atrás
+  document.getElementById('btnBack').disabled = history.length === 0;
+
+  // Progreso
+  const step = history.length + 1;
+  const est  = Math.max(totalQ, step + 2);
+  const pct  = Math.min(Math.round((history.length / est) * 100), 90);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Paso ${step}`;
+
+  // Animar
+  const card = document.getElementById('surveyCard');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'fadeUp .35s ease both';
+}
+
+function selectOption(opt) {
+  const q = questions[currentId];
+  const isMulti = q.type === 'multi';
+
+  if (isMulti) {
+    let sel = Array.isArray(answers[currentId]) ? [...answers[currentId]] : [];
+    if (opt.exclusive) {
+      sel = sel.includes(opt.id) ? [] : [opt.id];
+    } else {
+      sel = sel.filter(id => { const o = q.options.find(o => o.id === id); return !o || !o.exclusive; });
+      if (sel.includes(opt.id)) sel = sel.filter(id => id !== opt.id);
+      else sel.push(opt.id);
+    }
+    answers[currentId] = sel;
+    // Re-render opciones
+    const grid = document.getElementById('optionsGrid');
+    grid.querySelectorAll('.option-card').forEach((card, i) => {
+      card.classList.toggle('selected', sel.includes(q.options[i].id));
+    });
+    document.getElementById('btnNext').classList[sel.length > 0 ? 'add' : 'remove']('visible');
+  } else {
+    answers[currentId] = opt.id;
+    // Mostrar alerta si aplica
+    checkAlerta(q, opt.id);
+    // Para single: avanzar automáticamente solo si no hay alerta
+    if (!q.alerta || q.alerta.condicion.opcion !== opt.id) {
+      setTimeout(() => advance(), 250);
+    } else {
+      // Con alerta: mostrar botón continuar
+      document.getElementById('btnNext').classList.add('visible');
+    }
+  }
+}
+
+function checkAlerta(q, selectedId) {
+  const alertaBox = document.getElementById('alertaBox');
+  if (q.alerta && q.alerta.condicion.opcion === selectedId) {
+    alertaBox.textContent = q.alerta.mensaje;
+    alertaBox.classList.add('visible');
+  } else {
+    alertaBox.classList.remove('visible');
+  }
+}
+
+function advanceNext() {
+  const q = questions[currentId];
+  if (q.type === 'textarea') {
+    answers[currentId] = document.getElementById('surveyTextarea').value.trim();
+  }
+  advance();
+}
+
+function advance() {
+  const q = questions[currentId];
+  const nextId = resolveNext(q);
+  history.push(currentId);
+  if (nextId === '_end') { showResult(); return; }
+  currentId = nextId;
+  render();
+}
+
+function goBack() {
+  if (history.length === 0) return;
+  currentId = history.pop();
+  render();
+}
+
+// ─── RESULTADO ────────────────────────────────────────────────────────────────
+function showResult() {
+  document.getElementById('surveyCard').style.display   = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+
+  // Si es para un niño → siempre alergólogo pediátrico; si no, según el tipo de consulta
+  const tipo  = answers.q_perfil === 'nino' ? 'pediatrico' : (answers.q_tipo || 'orientacion');
+  const espec = data.especialistas[tipo] || data.especialistas.orientacion;
+  const duracion  = answers.b1_duracion || '';
+
+  // Tarjeta de especialista
+  document.getElementById('rSpecCard').innerHTML = `
+    <span class="spec-emoji">${espec.emoji}</span>
+    <div>
+      <div class="spec-titulo">${espec.titulo}</div>
+      <div class="spec-area">${espec.especialidad}</div>
+      <div class="spec-desc">Un/a ${espec.descripcion}.</div>
+    </div>`;
+
+  // Texto intro
+  document.getElementById('rIntro').innerHTML =
+    `Estamos incorporando especialistas a la plataforma para que puedas reservar, agendar y pagar tu consulta online en pocos pasos.<br><br>` +
+    `La videollamada dura <strong>15 minutos</strong> y el especialista recibirá todo lo que nos has contado hoy antes de que empiece la visita.`;
+
+  // Campos ocultos
+  document.getElementById('hTipo').value  = tipo;
+  document.getElementById('hEspec').value  = espec.titulo;
+  document.getElementById('hDuracion').value = duracion;
+
+  const resultCard = document.getElementById('resultCard');
+  resultCard.classList.add('visible');
+}
+
+async function submitEmail(e) {
+  e.preventDefault();
+  const form = document.getElementById('emailForm');
+  const fd   = new FormData(form);
+  try {
+    await fetch('https://formspree.io/f/xrevvber', {
+      method: 'POST',
+      body: fd,
+      headers: { Accept: 'application/json' }
+    });
+    form.style.display = 'none';
+    document.getElementById('emailOk').style.display = 'block';
+  } catch(_) {
+    alert('Hubo un problema al enviar. Inténtalo de nuevo.');
+  }
+}
+
+// Arranque
+render();
+</script>
+</body>
+</html>

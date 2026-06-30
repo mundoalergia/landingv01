@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mundo Alergia — Seleccionamos. Tú respiras.</title>
+  <meta name="description" content="Tienda curada para personas con alergias. Productos seleccionados con criterio clínico, Club de miembros y consultas con especialistas." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde:    #1A1512;   /* cálido casi negro — hero, footer */
+      --carbon:   #9A5353;   /* arcilla — sección oscura secundaria */
+      --terra:    #E2775F;   /* coral cálido — CTAs primarios */
+      --pizarra:  #FFBC81;   /* melocotón — acentos secundarios */
+      --niebla:   #FFF3E9;   /* arena cálida — fondos claros */
+      --crema:    #FAF4EF;   /* crema cálida — secciones neutras */
+      --blanco:   #FFFFFF;
+      --texto:    #1A1512;
+      --sub:      #7A5248;
+      --borde:    #EEE0D6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--crema);
+      color: var(--texto);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ════════════════════════════════════
+       ANNOUNCEMENT BAR
+    ════════════════════════════════════ */
+    .announce {
+      background: var(--verde);
+      color: var(--niebla);
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+    .announce a {
+      color: var(--terra);
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    .announce a:hover { text-decoration: underline; }
+
+    /* ════════════════════════════════════
+       NAV
+    ════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 36px; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      height: 64px;
+      transition: background 0.4s, top 0.3s, box-shadow 0.3s;
+    }
+
+    nav.scrolled {
+      top: 0;
+      background: rgba(26,21,18,0.97);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.07);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    /* Logo Dirección 1 — CONEXIÓN */
+    .logo-spiral {
+      width: 40px; height: 40px;
+      flex-shrink: 0;
+      object-fit: contain;
+      display: block;
+      border-radius: 50%;          /* recorte circular — elimina fondo blanco cuadrado */
+      background: transparent;
+      mix-blend-mode: screen;      /* sobre nav oscuro: los tonos cálidos resaltan */
+    }
+
+    /* En nav claro (transparente, sobre imagen oscura del hero) funciona bien */
+    /* En nav scrolled (casi-negro) screen hace los dots más luminosos = efecto deseado */
+
+    .logo-wordmark {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      gap: 3px;
+    }
+
+    .logo-main {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .logo-top {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.52rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: white; }
+
+    .nav-cta {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--verde) !important;
+      background: var(--terra);
+      padding: 9px 20px;
+      border-radius: 3px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: #C45A40; color: white !important; }
+
+    /* ════════════════════════════════════
+       HERO
+    ════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--verde);
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.45;
+    }
+
+    /* Animated breathing gradient overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(105deg, rgba(26,21,18,0.92) 0%, rgba(26,21,18,0.55) 55%, rgba(26,21,18,0.3) 100%),
+        radial-gradient(ellipse at 70% 40%, rgba(226,119,95,0.15) 0%, transparent 60%);
+      animation: heroBreath 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes heroBreath {
+      from { opacity: 0.9; }
+      to   { opacity: 1; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      padding: 120px 8% 100px;
+      max-width: 800px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 32px;
+    }
+
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--terra);
+      opacity: 0.6;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(3rem, 6vw, 5.2rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: white;
+      margin-bottom: 28px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--niebla);
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.65);
+      max-width: 520px;
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    .hero-sub strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+
+    /* ── Rutas duales en el hero ── */
+    .hero-paths {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+
+    .hero-path {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      padding: 16px 20px;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 220px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .hero-path:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+
+    .hero-path--guided {
+      background: var(--terra);
+      color: white;
+    }
+    .hero-path--direct {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(6px);
+    }
+    .hero-path--direct:hover { background: rgba(255,255,255,0.15); }
+
+    .hero-path-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    .hero-path-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+    .hero-path-body strong {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .hero-path-body em {
+      font-style: normal;
+      font-size: 0.72rem;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+
+    /* Botones genéricos (para otras secciones) */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--terra);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 16px 30px;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #C45A40; transform: translateY(-1px); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 16px 30px;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .h-stat { display: flex; flex-direction: column; }
+
+    .h-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: white;
+      line-height: 1;
+    }
+
+    .h-stat-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.45);
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      animation: scrollBounce 2.5s ease-in-out infinite;
+    }
+
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.35; }
+      50%       { transform: translateX(-50%) translateY(6px); opacity: 0.6; }
+    }
+
+    .scroll-hint svg { width: 18px; height: 18px; }
+
+    /* ════════════════════════════════════
+       PROBLEMA INTRO — 3 CATEGORÍAS
+    ════════════════════════════════════ */
+    .categorias {
+      background: var(--crema);
+      padding: 100px 6%;
+    }
+
+    .section-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--texto);
+      margin-bottom: 16px;
+    }
+
+    .section-title em { font-style: italic; color: var(--carbon); }
+
+    .section-sub {
+      font-size: 0.9rem;
+      color: var(--sub);
+      max-width: 500px;
+      margin-bottom: 60px;
+      line-height: 1.75;
+    }
+
+    /* ════════════════════════════════════
+       CATEGORÍAS — NAV + CARRUSEL
+       Shopify/Next.js: ver comentario en HTML de la sección #categorias
+    ════════════════════════════════════ */
+
+    /* Cabecera de cada bloque de carrusel: etiqueta + nav de pills */
+    .cat-block { margin-bottom: 3.5rem; }
+    .cat-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .cat-block-label {
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--terra);
+      white-space: nowrap;
+    }
+
+    /* Pills de navegación encima del carrusel */
+    .ccnav-pills {
+      display: flex;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .ccnav-pills::-webkit-scrollbar { display: none; }
+
+    .ccnav {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: .32rem;
+      padding: .38rem .75rem;
+      font-size: .52rem;
+      font-weight: 700;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      color: var(--carbon);
+      opacity: .38;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: opacity .2s, border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .ccnav:hover { opacity: .65; border-color: rgba(26,21,18,.1); }
+    .ccnav.active {
+      opacity: 1;
+      color: var(--verde);
+      background: rgba(26,21,18,.06);
+      border-color: rgba(26,21,18,.14);
+    }
+    .ccnav-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .85rem;
+      font-weight: 300;
+      opacity: .55;
+      letter-spacing: 0;
+    }
+
+    /* Separador entre los dos carruseles */
+    .cats-divider {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      margin: 3rem 0 2.5rem;
+    }
+    .cats-divider::before, .cats-divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: rgba(26,21,18,.1);
+    }
+    .cats-divider-label {
+      font-size: .58rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--carbon); opacity: .4; white-space: nowrap;
+    }
+
+    /* Wrapper + flechas */
+    .cat-carousel-wrap { position: relative; }
+
+    .cat-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 40px; height: 40px;
+      border: 1px solid rgba(26,21,18,.18);
+      border-radius: 50%;
+      background: rgba(248,246,242,.96);
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .82rem;
+      color: var(--verde);
+      transition: background .2s, border-color .2s, color .2s, opacity .2s;
+      line-height: 1;
+    }
+    .cat-arrow:hover { background: var(--terra); border-color: var(--terra); color: white; }
+    .cat-arrow:disabled { opacity: .18; pointer-events: none; }
+    .cat-arrow--prev { left: -20px; }
+    .cat-arrow--next { right: -20px; }
+
+    /* Track */
+    .cat-track {
+      display: flex;
+      gap: 3px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .cat-track::-webkit-scrollbar { display: none; }
+
+    /* Slides */
+    .cat-slide {
+      flex: 0 0 calc(33.333% - 2px);
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      cursor: pointer;
+      background: var(--carbon);
+    }
+    .cat-slide.is-coming { cursor: default; }
+
+    .cat-slide img {
+      position: absolute;
+      inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: .62;
+      transition: transform .7s ease, opacity .4s;
+    }
+    .cat-slide:not(.is-coming):hover img { transform: scale(1.06); opacity: .45; }
+    .cat-slide.is-coming img { opacity: .4; filter: saturate(.6); }
+    .cat-slide.is-coming:hover img { opacity: .33; transform: scale(1.03); }
+
+    .cat-slide-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(26,21,18,.92) 0%, rgba(26,21,18,.2) 55%, transparent 100%);
+    }
+
+    .cat-slide-badge {
+      position: absolute; top: 12px; right: 12px;
+      font-size: .51rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+      background: rgba(26,21,18,.7); color: rgba(255,255,255,.6);
+      padding: .22rem .6rem; border-radius: 3px; backdrop-filter: blur(4px);
+    }
+
+    .cat-slide-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 26px 22px 20px;
+      transform: translateY(10px);
+      transition: transform .4s ease;
+    }
+    .cat-slide:not(.is-coming):hover .cat-slide-content { transform: translateY(0); }
+    .cat-slide.is-coming .cat-slide-content { transform: none; }
+
+    .cat-slide-num {
+      font-size: .54rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 8px; display: block;
+    }
+    .cat-slide-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem; font-weight: 400; color: white; line-height: 1.15; margin-bottom: 10px;
+    }
+    .cat-slide-desc {
+      font-size: .74rem; color: rgba(255,255,255,.7); line-height: 1.65;
+      opacity: 0; transition: opacity .4s .05s; margin-bottom: 14px;
+    }
+    .cat-slide:not(.is-coming):hover .cat-slide-desc { opacity: 1; }
+    .cat-slide.is-coming .cat-slide-desc { opacity: 1; }
+
+    .cat-slide-actions {
+      display: flex; flex-direction: column; gap: 7px;
+      opacity: 0; transition: opacity .4s .1s;
+    }
+    .cat-slide:not(.is-coming):hover .cat-slide-actions { opacity: 1; }
+
+    .cat-btn {
+      display: inline-block;
+      font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      text-decoration: none; padding: 8px 14px; border-radius: 3px;
+      transition: background .2s, color .2s; text-align: center;
+    }
+    .cat-btn--guide { background: var(--terra); color: white; }
+    .cat-btn--guide:hover { background: #C45A40; }
+    .cat-btn--direct {
+      background: rgba(255,255,255,.15); color: white;
+      border: 1px solid rgba(255,255,255,.3);
+    }
+    .cat-btn--direct:hover { background: rgba(255,255,255,.28); }
+
+
+    /* ════════════════════════════════════
+       CÓMO FUNCIONA
+    ════════════════════════════════════ */
+    .como {
+      background: var(--verde);
+      padding: 100px 8%;
+    }
+
+    .como .section-title { color: white; margin-bottom: 8px; }
+    .como .section-sub { color: rgba(255,255,255,0.5); margin-bottom: 70px; }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 40px 32px;
+      transition: background 0.3s;
+    }
+
+    .step:hover { background: rgba(255,255,255,0.07); }
+
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: var(--terra);
+      opacity: 0.4;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .step-icon {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .step-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .step-desc {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.75;
+    }
+
+    /* ════════════════════════════════════
+       CLUB
+    ════════════════════════════════════ */
+    .club {
+      background: var(--carbon);
+      padding: 100px 8%;
+    }
+
+    .club-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .club .section-title { color: white; margin-bottom: 16px; }
+    .club .section-eyebrow { color: var(--niebla); opacity: 0.7; }
+    .club .section-sub { color: rgba(255,255,255,0.55); margin-bottom: 40px; }
+
+    .club-benefits {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    .club-benefit {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .benefit-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(226,119,95,0.2);
+      border: 1px solid rgba(226,119,95,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .benefit-text strong {
+      display: block;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 2px;
+    }
+
+    .club-tag {
+      display: inline-block;
+      background: rgba(210,225,224,0.15);
+      border: 1px solid rgba(210,225,224,0.2);
+      color: var(--niebla);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+    }
+
+    .club-visual {
+      position: relative;
+    }
+
+    .club-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 36px;
+    }
+
+    .club-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .club-badge {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    .club-free {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--carbon);
+      background: var(--niebla);
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .club-perks {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .club-perk {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      font-size: 0.82rem;
+    }
+
+    .perk-label { color: rgba(255,255,255,0.7); }
+    .perk-val { color: var(--terra); font-weight: 600; font-size: 0.75rem; }
+
+    /* ════════════════════════════════════
+       PRODUCTOS DESTACADOS
+    ════════════════════════════════════ */
+    .productos {
+      background: var(--crema);
+      padding: 100px 6%;
+    }
+
+    .productos-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .see-all {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--terra);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .prods-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .prod-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--borde);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .prod-card:hover {
+      box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+    }
+
+    .prod-img {
+      position: relative;
+      height: 240px;
+      overflow: hidden;
+      background: var(--niebla);
+    }
+
+    .prod-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .prod-card:hover .prod-img img { transform: scale(1.04); }
+
+    .prod-cat-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: white;
+      color: var(--carbon);
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+
+    .prod-body { padding: 24px 22px 20px; }
+
+    .prod-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--texto);
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+
+    .prod-solución {
+      font-size: 0.78rem;
+      color: var(--sub);
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    /* Multi-attribute star ratings */
+    .ratings { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .rating-label {
+      font-size: 0.68rem;
+      color: var(--sub);
+      font-weight: 500;
+      min-width: 110px;
+    }
+
+    .stars { display: flex; gap: 2px; }
+
+    .star {
+      font-size: 0.65rem;
+      line-height: 1;
+    }
+
+    .star.on  { color: var(--terra); }
+    .star.off { color: #DDD; }
+
+    .prod-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--borde);
+    }
+
+    .prod-precio { display: flex; flex-direction: column; }
+
+    .precio-pub {
+      font-size: 0.68rem;
+      color: var(--sub);
+      text-decoration: line-through;
+    }
+
+    .precio-club {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--carbon);
+    }
+
+    .precio-club span {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: var(--terra);
+      background: rgba(226,119,95,0.15);
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    .prod-btn {
+      background: var(--verde);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .prod-btn:hover { background: var(--carbon); }
+
+    /* ════════════════════════════════════
+       CONSULTAS MÉDICAS
+    ════════════════════════════════════ */
+    .consultas {
+      background: var(--niebla);
+      padding: 100px 8%;
+    }
+
+    .consultas-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .consultas-img {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+
+    .consultas-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .consultas-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: white;
+      border-radius: 12px;
+      padding: 18px 22px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .cbadge-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--texto);
+      margin-bottom: 4px;
+    }
+
+    .cbadge-sub {
+      font-size: 0.68rem;
+      color: var(--sub);
+    }
+
+    .cbadge-dot {
+      width: 8px;
+      height: 8px;
+      background: #2ECC71;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .consultas .section-eyebrow { color: var(--carbon); }
+    .consultas .section-title { color: var(--texto); margin-bottom: 20px; }
+    .consultas .section-sub { margin-bottom: 32px; }
+
+    .consulta-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .consulta-step {
+      display: flex;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--texto);
+    }
+
+    .cstep-num {
+      width: 28px;
+      height: 28px;
+      background: var(--carbon);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .cstep-text strong { font-weight: 600; }
+    .cstep-text { line-height: 1.6; }
+
+    /* ════════════════════════════════════
+       VS COMPARISON
+    ════════════════════════════════════ */
+    .vs-section {
+      background: white;
+      padding: 100px 8%;
+    }
+
+    .vs-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .vs-quote {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--texto);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .vs-quote strong { font-style: normal; font-weight: 600; color: var(--carbon); }
+
+    .vs-source {
+      font-size: 0.75rem;
+      color: var(--sub);
+      border-left: 2px solid var(--terra);
+      padding-left: 12px;
+    }
+
+    .vs-grid { display: flex; flex-direction: column; gap: 12px; }
+
+    .vs-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .vs-ellos {
+      background: var(--crema);
+      border: 1px solid var(--borde);
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 0.78rem;
+      color: var(--sub);
+      text-decoration: line-through;
+      text-decoration-color: #CCC;
+    }
+
+    .vs-sep {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #CCC;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .vs-nosotros {
+      background: var(--verde);
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 0.78rem;
+      color: white;
+      font-weight: 500;
+    }
+
+    /* ════════════════════════════════════
+       CTA FINAL / EMAIL
+    ════════════════════════════════════ */
+    .cta-final {
+      background: var(--verde);
+      padding: 120px 8%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative spiral in background */
+    .cta-spiral {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .cta-final .section-eyebrow { color: var(--pizarra); opacity: 0.7; }
+
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 300;
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .cta-title em { font-style: italic; color: var(--niebla); }
+
+    .cta-sub {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.5);
+      max-width: 460px;
+      margin: 0 auto 48px;
+      line-height: 1.8;
+      position: relative;
+    }
+
+    .form-wrap { display: flex; justify-content: center; position: relative; }
+
+    .form-row {
+      display: flex;
+      max-width: 480px;
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .form-row input[type="email"] {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 16px 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      background: transparent;
+      color: white;
+    }
+
+    .form-row input[type="email"]::placeholder { color: rgba(255,255,255,0.3); }
+
+    .form-row button {
+      border: none;
+      background: var(--terra);
+      color: white;
+      padding: 16px 26px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .form-row button:hover { background: #C45A40; }
+
+    .form-note { font-size: 0.68rem; color: rgba(255,255,255,0.25); margin-top: 12px; position: relative; }
+
+    .form-success {
+      display: none;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 16px 24px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--niebla);
+      font-weight: 500;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    /* ════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════ */
+    footer {
+      background: #100D0A;   /* negro cálido — sin tinte verde */
+      padding: 50px 8%;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .footer-brand-icon {
+      width: 34px; height: 34px;
+      object-fit: contain;
+      border-radius: 50%;
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      flex-shrink: 0;
+    }
+
+    .footer-brand-text { display: flex; flex-direction: column; gap: 4px; }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+    }
+
+    .footer-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+    .footer-copy {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.04em;
+    }
+
+    /* ════════════════════════════════════
+       CONTENIDO / BLOG
+    ════════════════════════════════════ */
+    .contenido {
+      background: var(--crema);
+      padding: 100px 6%;
+    }
+
+    .contenido-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .articulos-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .articulo {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--borde);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .articulo:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.09);
+      transform: translateY(-3px);
+    }
+
+    .art-img {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .articulo.featured .art-img { height: 280px; }
+    .articulo:not(.featured) .art-img { height: 180px; }
+
+    .art-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .articulo:hover .art-img img { transform: scale(1.04); }
+
+    .art-cat {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: white;
+      color: var(--carbon);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .art-body {
+      padding: 24px 22px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .art-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 10px;
+    }
+
+    .art-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--texto);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .articulo.featured .art-title { font-size: 1.45rem; }
+
+    .art-excerpt {
+      font-size: 0.8rem;
+      color: var(--sub);
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 18px;
+    }
+
+    .articulo:not(.featured) .art-excerpt {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .art-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid var(--borde);
+    }
+
+    .art-time {
+      font-size: 0.68rem;
+      color: var(--sub);
+    }
+
+    .art-link {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--terra);
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+
+    .art-link:hover { text-decoration: underline; }
+
+    /* ════════════════════════════════════
+       FADE-IN ANIMATIONS
+    ════════════════════════════════════ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
+    .fade-up.delay-4 { transition-delay: 0.4s; }
+
+    /* ════════════════════════════════════
+       RESPONSIVE — CARRUSEL
+    ════════════════════════════════════ */
+    @media (max-width: 960px) {
+      .cat-slide { flex: 0 0 calc(50% - 1.5px); }
+      .cat-slide-desc { opacity: 1; }
+      .cat-slide-content { transform: none; }
+      .cat-slide-actions { opacity: 1; }
+      .cat-arrow { display: none; }
+    }
+    @media (max-width: 600px) {
+      .cat-slide { flex: 0 0 calc(85% - 1.5px); }
+      .cat-slide-title { font-size: 1.25rem; }
+    }
+
+    /* ════════════════════════════════════
+       RESPONSIVE — RESTO
+    ════════════════════════════════════ */
+    @media (max-width: 960px) {
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .club-inner { grid-template-columns: 1fr; gap: 48px; }
+      .prods-grid { grid-template-columns: 1fr 1fr; }
+      .consultas-inner { grid-template-columns: 1fr; gap: 48px; }
+      .vs-inner { grid-template-columns: 1fr; gap: 48px; }
+      .articulos-grid { grid-template-columns: 1fr; }
+      .contenido-header { flex-direction: column; align-items: flex-start; }
+      footer { grid-template-columns: 1fr; gap: 28px; }
+      .nav-links { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .prods-grid { grid-template-columns: 1fr; }
+      .hero-stats { flex-wrap: wrap; gap: 24px; }
+      .hero-actions { flex-direction: column; }
+      .btn-primary, .btn-ghost { text-align: center; justify-content: center; }
+      .form-row { flex-direction: column; }
+      .form-row button { padding: 14px; }
+      .announce { font-size: 0.65rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="announce" id="announce">
+    Abrimos en septiembre de 2026 · Únete a la lista de acceso anticipado
+    <a href="#cta">Apuntarme →</a>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a class="logo" href="#">
+      <img src="logo.png" class="logo-spiral" alt="Mundo Alergia" />
+      <div class="logo-wordmark">
+        <span class="logo-main">Mundo Alergia</span>
+        <span class="logo-top">Seleccionamos. Tú respiras.</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#categorias">Tienda</a></li>
+      <li><a href="#como">Oriéntame</a></li>
+      <li><a href="#club">Club</a></li>
+      <li><a href="articulos.html">Artículos</a></li>
+      <li><a href="#consultas">Consultas médicas</a></li>
+      <li><a href="#cta" class="nav-cta">Acceso anticipado</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <!-- Video background — reemplaza con tu propio vídeo si es necesario -->
+    <!-- Hero image — madre cuidando a su hija -->
+    <div class="hero-video" style="background-image:url('https://images.unsplash.com/photo-1551642465-6e7e5b2f10fa?w=1920&q=85&auto=format&fit=crop'); background-size:cover; background-position:center 30%;"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <span class="hero-eyebrow">Seleccionamos. Tú respiras.</span>
+
+      <h1 class="hero-title">
+        Menos alérgenos,<br/>
+        <em>más vida.</em>
+      </h1>
+
+      <p class="hero-sub">
+        No somos una farmacia. Somos una tienda curada para personas que quieren
+        <strong>respirar mejor en casa</strong>, dormir tranquilos y elegir con criterio —
+        sin pasarse horas investigando.
+      </p>
+
+      <div class="hero-paths">
+        <a href="encuesta-recomendador.html" class="hero-path hero-path--guided">
+          <span class="hero-path-icon">🧭</span>
+          <span class="hero-path-body">
+            <strong>No sé qué necesito</strong>
+            <em>Cuéntame tus síntomas y te oriento</em>
+          </span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#categorias" class="hero-path hero-path--direct">
+          <span class="hero-path-icon">🛒</span>
+          <span class="hero-path-body">
+            <strong>Sé lo que busco</strong>
+            <em>Ir directo a la tienda</em>
+          </span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="h-stat">
+          <span class="h-stat-num">81%</span>
+          <span class="h-stat-label">usaría nuestra guía</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-num">55%</span>
+          <span class="h-stat-label">pide acceso anticipado</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-num">3</span>
+          <span class="h-stat-label">categorías curadas</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-num">100%</span>
+          <span class="h-stat-label">selección con criterio clínico</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M7 10l5 5 5-5" stroke-linecap="round"/>
+      </svg>
+      Descubrir
+    </div>
+  </section>
+
+  <!-- ═══ CATEGORÍAS — por problema ═══ -->
+  <section class="categorias" id="categorias">
+    <span class="section-eyebrow fade-up">Tu problema, tu solución</span>
+    <h2 class="section-title fade-up delay-1">No buscamos por producto.<br/><em>Buscamos por lo que sientes.</em></h2>
+    <p class="section-sub fade-up delay-2">
+      Cada categoría está pensada alrededor de una problemática real. Antes de mostrarte un producto,
+      te explicamos qué ayuda y qué no.
+    </p>
+
+    <!--
+    ═══════════════════════════════════════════════════════
+    SHOPIFY / NEXT.JS MIGRATION — CARRUSEL DE CATEGORÍAS
+    ═══════════════════════════════════════════════════════
+
+    DATOS: Cada cat-slide = 1 Shopify Collection
+      cat-slide-num    → metafield custom.display_number
+      cat-slide-title  → collection.title
+      cat-slide-desc   → collection.description
+      is-coming        → metafield custom.coming_soon = "true"
+                         (o colección sin productos publicados)
+      cat-btn--direct  → href="/collections/{collection.handle}"
+      img src          → collection.image.url (fallback: metafield hero_image)
+
+    QUERY (Storefront API GraphQL):
+      query CategoryCarousel {
+        collections(first: 20, sortKey: MANUAL) {
+          nodes {
+            id handle title description
+            image { url altText }
+            metafields(identifiers: [
+              { namespace: "custom", key: "display_number" }
+              { namespace: "custom", key: "coming_soon" }
+              { namespace: "custom", key: "hero_image" }
+            ]) { key value }
+          }
+        }
+      }
+
+    COMPONENTE NEXT.JS: app/components/CategoryCarousel.jsx
+      'use client'  ← necesario por useState/useRef del scroll
+      Librería recomendada: Embla Carousel (scroll-snap + a11y)
+        npm install embla-carousel-react embla-carousel-auto-height
+      - selectedIndex → active nav item (clase "active")
+      - emblaApi.scrollTo(index) → desde los nav-tabs y las flechas
+      - emblaApi.on('select', ...) → actualiza dots + nav tabs
+
+    ARCHIVO: app/collections/[handle]/page.jsx  (slug individual)
+    ═══════════════════════════════════════════════════════
+    -->
+
+    <!-- ══ CARRUSEL A: Categorías con productos ══ -->
+    <div class="cat-block fade-up delay-1">
+
+      <div class="cat-block-header">
+        <span class="cat-block-label">En tienda</span>
+        <div class="ccnav-pills" id="pills-a">
+          <button class="ccnav active" data-idx="0">
+            <span class="ccnav-num">01</span> Nasal y respiratorio
+          </button>
+          <button class="ccnav" data-idx="1">
+            <span class="ccnav-num">02</span> Noche segura
+          </button>
+          <button class="ccnav" data-idx="2">
+            <span class="ccnav-num">03</span> Hogar sin alérgeno
+          </button>
+        </div>
+      </div>
+
+      <div class="cat-carousel-wrap">
+        <button class="cat-arrow cat-arrow--prev" id="prev-a" aria-label="Anterior" disabled>&#8592;</button>
+        <button class="cat-arrow cat-arrow--next" id="next-a" aria-label="Siguiente">&#8594;</button>
+        <div class="cat-track" id="track-a">
+
+        <!-- ── 01 Nasal y respiratorio (CON PRODUCTOS) ── -->
+        <div class="cat-slide" data-idx="0">
+          <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80"
+               alt="Niño respirando libre" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">01 — Categoría</span>
+            <h3 class="cat-slide-title">Cuidado nasal y<br/>respiratorio</h3>
+            <p class="cat-slide-desc">Irrigadores nasales, cámaras espaciadoras, monitores de flujo. Todo lo que ayuda a tu sistema respiratorio cada día.</p>
+            <div class="cat-slide-actions">
+              <a href="encuesta-recomendador.html" class="cat-btn cat-btn--guide">¿Cuál me conviene? →</a>
+              <a href="productos.html?cat=nasal-respiratorio" class="cat-btn cat-btn--direct">Ver productos →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 02 Noche segura (CON PRODUCTOS) ── -->
+        <div class="cat-slide" data-idx="1">
+          <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80"
+               alt="Dormitorio limpio antiácaros" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">02 — Categoría</span>
+            <h3 class="cat-slide-title">Noche<br/>segura</h3>
+            <p class="cat-slide-desc">Protectores de colchón y almohada antiácaros, cuñas posturales. Para que el descanso no sea el momento de mayor exposición.</p>
+            <div class="cat-slide-actions">
+              <a href="encuesta-recomendador.html" class="cat-btn cat-btn--guide">¿Cuál me conviene? →</a>
+              <a href="productos.html?cat=noche-segura" class="cat-btn cat-btn--direct">Ver productos →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 03 Hogar sin alérgeno (CON PRODUCTOS) ── -->
+        <div class="cat-slide" data-idx="2">
+          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80"
+               alt="Salón moderno limpio y luminoso" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">03 — Categoría</span>
+            <h3 class="cat-slide-title">Hogar sin<br/>alérgeno</h3>
+            <p class="cat-slide-desc">Purificadores HEPA, aspiradores con filtro certificado, sensores de calidad del aire. Tu casa como aliada.</p>
+            <div class="cat-slide-actions">
+              <a href="encuesta-recomendador.html" class="cat-btn cat-btn--guide">¿Cuál me conviene? →</a>
+              <a href="productos.html?cat=hogar-sin-alergeno" class="cat-btn cat-btn--direct">Ver productos →</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /track-a -->
+      </div><!-- /carousel-wrap -->
+    </div><!-- /cat-block A -->
+
+    <!-- Separador -->
+    <div class="cats-divider fade-up">
+      <span class="cats-divider-label">Próximamente en la tienda</span>
+    </div>
+
+    <!-- ══ CARRUSEL B: Categorías próximamente ══ -->
+    <div class="cat-block fade-up">
+
+      <div class="cat-block-header">
+        <span class="cat-block-label">En camino</span>
+        <div class="ccnav-pills" id="pills-b">
+          <button class="ccnav active" data-idx="0">
+            <span class="ccnav-num">04</span> Piel sensible
+          </button>
+          <button class="ccnav" data-idx="1">
+            <span class="ccnav-num">05</span> Mascotas
+          </button>
+          <button class="ccnav" data-idx="2">
+            <span class="ccnav-num">06</span> Pólenes
+          </button>
+          <button class="ccnav" data-idx="3">
+            <span class="ccnav-num">07</span> Niños y bebés
+          </button>
+          <button class="ccnav" data-idx="4">
+            <span class="ccnav-num">08</span> Asma
+          </button>
+          <button class="ccnav" data-idx="5">
+            <span class="ccnav-num">09</span> Limpieza
+          </button>
+          <button class="ccnav" data-idx="6">
+            <span class="ccnav-num">10</span> Calidad del aire
+          </button>
+          <button class="ccnav" data-idx="7">
+            <span class="ccnav-num">11</span> Humedad
+          </button>
+          <button class="ccnav" data-idx="8">
+            <span class="ccnav-num">12</span> Sin VOCs
+          </button>
+        </div>
+      </div>
+
+      <div class="cat-carousel-wrap">
+        <button class="cat-arrow cat-arrow--prev" id="prev-b" aria-label="Anterior" disabled>&#8592;</button>
+        <button class="cat-arrow cat-arrow--next" id="next-b" aria-label="Siguiente">&#8594;</button>
+        <div class="cat-track" id="track-b">
+
+        <!-- ── 04 Piel sensible ── -->
+        <div class="cat-slide is-coming" data-idx="0">
+          <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=700&q=75"
+               alt="Piel sensible" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">04 — Categoría</span>
+            <h3 class="cat-slide-title">Piel<br/>sensible</h3>
+            <p class="cat-slide-desc">Cremas calmantes y sprays sin perfume para pieles reactivas y atópicas.</p>
+          </div>
+        </div>
+
+        <!-- ── 05 Mascotas ── -->
+        <div class="cat-slide is-coming" data-idx="1">
+          <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&q=75"
+               alt="Perro en casa, convivir con mascota y alergia" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">05 — Categoría</span>
+            <h3 class="cat-slide-title">Vivir con<br/>mascotas</h3>
+            <p class="cat-slide-desc">Purificadores anti-dander, fundas y sprays para convivir con perros y gatos sin renunciar a nada.</p>
+          </div>
+        </div>
+
+        <!-- ── 06 Pólenes ── -->
+        <div class="cat-slide is-coming" data-idx="2">
+          <img src="https://images.unsplash.com/photo-1464454709131-ffd692591ee5?w=700&q=75"
+               alt="Campo en flor, temporada de pólenes" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">06 — Categoría</span>
+            <h3 class="cat-slide-title">Temporada<br/>de pólenes</h3>
+            <p class="cat-slide-desc">Selección curada para los meses de mayor exposición: irrigadores, purificadores y monitores estacionales.</p>
+          </div>
+        </div>
+
+        <!-- ── 07 Niños y bebés ── -->
+        <div class="cat-slide is-coming" data-idx="3">
+          <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=700&q=75"
+               alt="Niño jugando en casa" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">07 — Categoría</span>
+            <h3 class="cat-slide-title">Niños<br/>y bebés</h3>
+            <p class="cat-slide-desc">Cámaras espaciadoras pediátricas, tiras nasales infantiles y cremas para pieles pequeñas.</p>
+          </div>
+        </div>
+
+        <!-- ── 08 Asma ── -->
+        <div class="cat-slide is-coming" data-idx="4">
+          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=75"
+               alt="Persona activa respirando al aire libre" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">08 — Categoría</span>
+            <h3 class="cat-slide-title">Asma<br/>activa</h3>
+            <p class="cat-slide-desc">Cámaras espaciadoras adultos y difusores respiratorios. Controla el asma sin que te controle.</p>
+          </div>
+        </div>
+
+        <!-- ── 09 Limpieza ── -->
+        <div class="cat-slide is-coming" data-idx="5">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=75"
+               alt="Limpieza profunda del hogar sin alérgenos" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">09 — Categoría</span>
+            <h3 class="cat-slide-title">Limpieza<br/>de fondo</h3>
+            <p class="cat-slide-desc">Vaporetas, robots aspiradores HEPA y accesorios antiácaros para limpiar de verdad.</p>
+          </div>
+        </div>
+
+        <!-- ── 10 Calidad del aire ── -->
+        <div class="cat-slide is-coming" data-idx="6">
+          <img src="https://images.unsplash.com/photo-1545259742-89e2ecbac756?w=700&q=75"
+               alt="Sensor de calidad del aire en hogar moderno" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">10 — Categoría</span>
+            <h3 class="cat-slide-title">Calidad<br/>del aire</h3>
+            <p class="cat-slide-desc">Medidores de PM2.5, CO₂ y VOC. Estaciones ambientales para saber qué respiras en cada habitación.</p>
+          </div>
+        </div>
+
+        <!-- ── 11 Humedad ── -->
+        <div class="cat-slide is-coming" data-idx="7">
+          <img src="https://images.unsplash.com/photo-1534619039-55001f55774e?w=700&q=75"
+               alt="Ventana con condensación, gestión de humedad" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">11 — Categoría</span>
+            <h3 class="cat-slide-title">Control de<br/>humedad</h3>
+            <p class="cat-slide-desc">Deshumidificadores, higrómetros y humidificadores. La humedad correcta reduce ácaros y hongos.</p>
+          </div>
+        </div>
+
+        <!-- ── 12 Sin VOCs ── -->
+        <div class="cat-slide is-coming" data-idx="8">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=75"
+               alt="Cocina limpia y ventilada, sin olores" loading="lazy"/>
+          <div class="cat-slide-overlay"></div>
+          <span class="cat-slide-badge">Próximamente</span>
+          <div class="cat-slide-content">
+            <span class="cat-slide-num">12 — Categoría</span>
+            <h3 class="cat-slide-title">Sin olores<br/>ni VOCs</h3>
+            <p class="cat-slide-desc">Absorbedores, carbón activo y purificadores especializados en compuestos orgánicos volátiles.</p>
+          </div>
+        </div>
+
+        </div><!-- /track-b -->
+      </div><!-- /carousel-wrap -->
+    </div><!-- /cat-block B -->
+
+  </section>
+
+  <!-- ═══ CÓMO FUNCIONA ═══ -->
+  <section class="como" id="como">
+    <span class="section-eyebrow fade-up">El proceso</span>
+    <h2 class="section-title fade-up delay-1">Cuatro pasos para <em>dejar de adivinar</em></h2>
+    <p class="section-sub fade-up delay-2">Un camino pensado para que cada decisión de compra tenga sentido.</p>
+
+    <div class="steps-grid">
+      <div class="step fade-up">
+        <div class="step-num">01</div>
+        <span class="step-icon">🔍</span>
+        <h3 class="step-title">Te perfilas</h3>
+        <p class="step-desc">Cinco preguntas sobre tus síntomas, tu hogar y tu rutina. Sin datos médicos, sin registros. Solo para orientarte mejor.</p>
+      </div>
+
+      <div class="step fade-up delay-1">
+        <div class="step-num">02</div>
+        <span class="step-icon">✨</span>
+        <h3 class="step-title">Descubres</h3>
+        <p class="step-desc">Las categorías y productos más relevantes para tu caso, con explicación de por qué cada uno puede ayudarte — y qué debes vigilar.</p>
+      </div>
+
+      <div class="step fade-up delay-2">
+        <div class="step-num">03</div>
+        <span class="step-icon">⭐</span>
+        <h3 class="step-title">Compras con criterio</h3>
+        <p class="step-desc">Precios justos. Los miembros del Club acceden a precios exclusivos. Sin suscripción de pago — el Club es gratuito.</p>
+      </div>
+
+      <div class="step fade-up delay-3">
+        <div class="step-num">04</div>
+        <span class="step-icon">🌱</span>
+        <h3 class="step-title">Mejoras</h3>
+        <p class="step-desc">Artículos, guías de temporada y novedades de producto curadas para ti. Tu historial y favoritos siempre accesibles en el Club.</p>
+      </div>
+    </div>
+
+    <div class="steps-cta fade-up" style="text-align:center;margin-top:3rem;">
+      <a href="encuesta-recomendador.html" class="btn-primary" style="display:inline-block;">Comienza a descubrir →</a>
+      <p style="margin-top:.9rem;font-size:.75rem;letter-spacing:.06em;color:var(--carbon);opacity:.75;">90 segundos · Sin registro · Sin datos médicos</p>
+    </div>
+  </section>
+
+  <!-- ═══ CLUB ═══ -->
+  <section class="club" id="club">
+    <div class="club-inner">
+      <div>
+        <span class="club-tag">Registro gratuito · Sin cuotas</span>
+        <span class="section-eyebrow fade-up">Club Mundo Alergia</span>
+        <h2 class="section-title fade-up delay-1">Para los que ya saben<br/><em>que esto es un estilo de vida.</em></h2>
+        <p class="section-sub fade-up delay-2">
+          Registrarse es gratis y siempre lo será. El Club existe porque creemos que quienes
+          conviven con alergias merecen un acceso diferente a la información y a los productos.
+        </p>
+
+        <ul class="club-benefits fade-up delay-2">
+          <li class="club-benefit">
+            <div class="benefit-icon">🏷</div>
+            <div class="benefit-text">
+              <strong>Precios Club exclusivos</strong>
+              Solo visibles y aplicables a miembros registrados. El cartel de "precio Club" en cada producto.
+            </div>
+          </li>
+          <li class="club-benefit">
+            <div class="benefit-icon">📋</div>
+            <div class="benefit-text">
+              <strong>Historial y favoritos</strong>
+              Todo lo que has visto, comprado o guardado, en un solo lugar. Nunca más "¿cuál era ese purificador que había visto?"
+            </div>
+          </li>
+          <li class="club-benefit">
+            <div class="benefit-icon">📚</div>
+            <div class="benefit-text">
+              <strong>Contenido y guías premium</strong>
+              Guías de temporada de pólenes, protocolos de limpieza del hogar y artículos médicos con fuente verificada.
+            </div>
+          </li>
+          <li class="club-benefit">
+            <div class="benefit-icon">🩺</div>
+            <div class="benefit-text">
+              <strong>Acceso a consultas médicas</strong>
+              Videollamada con alergólogo especialista. Precio reducido para miembros del Club.
+            </div>
+          </li>
+        </ul>
+
+        <a href="#cta" class="btn-primary">Unirme al Club — es gratis</a>
+      </div>
+
+      <div class="club-visual fade-up delay-3">
+        <div class="club-card">
+          <div class="club-card-header">
+            <span class="club-badge">Club Mundo Alergia</span>
+            <span class="club-free">Gratuito</span>
+          </div>
+          <div class="club-perks">
+            <div class="club-perk">
+              <span class="perk-label">Precios exclusivos de miembro</span>
+              <span class="perk-val">✓ Activo</span>
+            </div>
+            <div class="club-perk">
+              <span class="perk-label">Historial de productos</span>
+              <span class="perk-val">✓ Activo</span>
+            </div>
+            <div class="club-perk">
+              <span class="perk-label">Guías y artículos premium</span>
+              <span class="perk-val">✓ Activo</span>
+            </div>
+            <div class="club-perk">
+              <span class="perk-label">Consultas con especialista</span>
+              <span class="perk-val">Precio miembro</span>
+            </div>
+            <div class="club-perk">
+              <span class="perk-label">Alertas de temporada alta</span>
+              <span class="perk-val">✓ Activo</span>
+            </div>
+            <div class="club-perk">
+              <span class="perk-label">Perfilado personalizado</span>
+              <span class="perk-val">✓ Activo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRODUCTOS DESTACADOS ═══ -->
+  <section class="productos" id="productos">
+    <div class="productos-header">
+      <div>
+        <span class="section-eyebrow fade-up">Selección curada</span>
+        <h2 class="section-title fade-up delay-1">Lo que realmente <em>marca la diferencia</em></h2>
+      </div>
+      <a href="#categorias" class="see-all fade-up">
+        Ver todas las categorías →
+      </a>
+    </div>
+
+    <div class="prods-grid">
+
+      <!-- Producto 1: Rhinodouche -->
+      <div class="prod-card fade-up">
+        <div class="prod-img">
+          <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=600&q=80"
+               alt="Irrigador nasal — higiene respiratoria diaria" loading="lazy"/>
+          <span class="prod-cat-tag">Cuidado nasal</span>
+        </div>
+        <div class="prod-body">
+          <h3 class="prod-name">Rhinodouche Junior + 26 sobres</h3>
+          <p class="prod-solución">La higiene nasal diaria reduce la carga alergénica en un 40%. El kit más completo para niños de 3 a 12 años.</p>
+          <div class="ratings">
+            <div class="rating-row">
+              <span class="rating-label">Eficacia probada</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span>
+              </div>
+            </div>
+            <div class="rating-row">
+              <span class="rating-label">Facilidad de uso</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span>
+              </div>
+            </div>
+            <div class="rating-row">
+              <span class="rating-label">Seguridad pediátrica</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span>
+              </div>
+            </div>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-precio">
+              <span class="precio-pub">24,90 €</span>
+              <span class="precio-club">22,90 € <span>Club</span></span>
+            </div>
+            <button class="prod-btn">Ver producto</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Producto 2: Protector antiácaros -->
+      <div class="prod-card fade-up delay-1">
+        <div class="prod-img">
+          <img src="https://images.unsplash.com/photo-1505693314120-0d443867891c?w=600&q=80"
+               alt="Cama con ropa de cama limpia — noche sin alérgenos" loading="lazy"/>
+          <span class="prod-cat-tag">Noche segura</span>
+        </div>
+        <div class="prod-body">
+          <h3 class="prod-name">Protector de Colchón Antiácaros Premium</h3>
+          <p class="prod-solución">Barrera física completa que bloquea el 99,6% de los ácaros del polvo. Lavable a 60°C, transpirable y certificado por alergólogos.</p>
+          <div class="ratings">
+            <div class="rating-row">
+              <span class="rating-label">Barrera antiácaros</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span>
+              </div>
+            </div>
+            <div class="rating-row">
+              <span class="rating-label">Comodidad al dormir</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span>
+              </div>
+            </div>
+            <div class="rating-row">
+              <span class="rating-label">Facilidad de lavado</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span>
+              </div>
+            </div>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-precio">
+              <span class="precio-pub">49,90 €</span>
+              <span class="precio-club">44,90 € <span>Club</span></span>
+            </div>
+            <button class="prod-btn">Ver producto</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Producto 3: Purificador HEPA -->
+      <div class="prod-card fade-up delay-2">
+        <div class="prod-img">
+          <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80"
+               alt="Purificador de aire HEPA" loading="lazy"/>
+          <span class="prod-cat-tag">Hogar sin alérgeno</span>
+        </div>
+        <div class="prod-body">
+          <h3 class="prod-name">Purificador de Aire HEPA Certificado</h3>
+          <p class="prod-solución">Filtra el 99,97% de partículas ≥0,3 μm: ácaros, esporas de moho, pelos de mascota y partículas de polvo. Para salas de hasta 40 m².</p>
+          <div class="ratings">
+            <div class="rating-row">
+              <span class="rating-label">Eficacia filtrado</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span>
+              </div>
+            </div>
+            <div class="rating-row">
+              <span class="rating-label">Nivel de ruido</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span>
+              </div>
+            </div>
+            <div class="rating-row">
+              <span class="rating-label">Coste de mantenimiento</span>
+              <div class="stars">
+                <span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span><span class="star off">★</span>
+              </div>
+            </div>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-precio">
+              <span class="precio-pub">249,00 €</span>
+              <span class="precio-club">229,00 € <span>Club</span></span>
+            </div>
+            <button class="prod-btn">Ver producto</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ CONSULTAS MÉDICAS ═══ -->
+  <section class="consultas" id="consultas">
+    <div class="consultas-inner">
+      <div class="consultas-img fade-up">
+        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
+             alt="Consulta médica online con especialista en alergias" loading="lazy"/>
+        <div class="consultas-badge">
+          <p class="cbadge-title"><span class="cbadge-dot"></span>Especialistas disponibles</p>
+          <p class="cbadge-sub">Alergólogos certificados · Videollamada</p>
+        </div>
+      </div>
+
+      <div>
+        <span class="section-eyebrow fade-up">Consultas médicas</span>
+        <h2 class="section-title fade-up delay-1">Habla con un especialista.<br/><em>Sin esperas. Sin desplazamientos.</em></h2>
+        <p class="section-sub fade-up delay-2">
+          Conectamos con alergólogos especializados para una videollamada personalizada.
+          Antes de la consulta, completarás un perfil médico breve que permite al médico
+          llegar preparado — sin perder tiempo en anamnesis básica.
+        </p>
+
+        <ol class="consulta-steps fade-up delay-2">
+          <li class="consulta-step">
+            <div class="cstep-num">1</div>
+            <div class="cstep-text">
+              <strong>Rellenas tu perfil previo:</strong> síntomas actuales, historial, productos que usas, dudas concretas. Un formulario guiado de 10 minutos.
+            </div>
+          </li>
+          <li class="consulta-step">
+            <div class="cstep-num">2</div>
+            <div class="cstep-text">
+              <strong>El especialista lo revisa antes de la llamada.</strong> Llega a la consulta sabiendo quién eres y qué necesitas.
+            </div>
+          </li>
+          <li class="consulta-step">
+            <div class="cstep-num">3</div>
+            <div class="cstep-text">
+              <strong>Videollamada de 15 minutos.</strong> Diagnóstico orientativo, recomendaciones de rutinas y plan de acción personalizado.
+            </div>
+          </li>
+        </ol>
+
+        <a href="ficha-preconsulta.html" class="btn-primary">Preparar mi consulta</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ VS COMPARISON ═══ -->
+  <section class="vs-section">
+    <div class="vs-inner">
+      <div class="fade-up">
+        <span class="section-eyebrow">El problema que resolvemos</span>
+        <blockquote class="vs-quote">
+          "No quiero probar más cosas <strong>a ver si funcionan</strong>.
+          Quiero saber con certeza qué me ayuda."
+        </blockquote>
+        <p class="vs-source">— Participante de nuestra encuesta de validación, 2025</p>
+      </div>
+
+      <div class="vs-grid fade-up delay-1">
+        <div class="vs-row">
+          <div class="vs-ellos">Cientos de productos sin criterio</div>
+          <span class="vs-sep">vs</span>
+          <div class="vs-nosotros">Solo lo que realmente funciona</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-ellos">Foto de producto sobre fondo blanco</div>
+          <span class="vs-sep">vs</span>
+          <div class="vs-nosotros">El resultado que obtendrás en casa</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-ellos">Reseñas anónimas de dudosa credibilidad</div>
+          <span class="vs-sep">vs</span>
+          <div class="vs-nosotros">Valoración multiparámetro con criterio clínico</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-ellos">Tú haces horas de investigación</div>
+          <span class="vs-sep">vs</span>
+          <div class="vs-nosotros">Nosotros lo hacemos. Tú eliges.</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-ellos">Amazon no te explica por qué</div>
+          <span class="vs-sep">vs</span>
+          <div class="vs-nosotros">Justificación clínica de cada decisión</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTENIDO / ARTÍCULOS ═══ -->
+  <section class="contenido" id="contenido">
+    <div class="contenido-header">
+      <div>
+        <span class="section-eyebrow fade-up">Saber para elegir mejor</span>
+        <h2 class="section-title fade-up delay-1">Artículos con criterio,<br/><em>no con algoritmo.</em></h2>
+        <p class="section-sub fade-up delay-2">
+          Documentamos lo que funciona — con fuente, con contexto y sin vender humo.
+          Cada artículo enlaza con los productos y soluciones que valida.
+        </p>
+      </div>
+      <a href="articulos.html" class="see-all fade-up">Ver todos los artículos →</a>
+    </div>
+
+    <div class="articulos-grid">
+
+      <!-- Artículo destacado -->
+      <div class="articulo featured fade-up">
+        <div class="art-img">
+          <img src="https://images.unsplash.com/photo-1457530378978-8bac673b8062?w=900&q=80"
+               alt="Árboles en flor — índice de pólenes" loading="lazy"/>
+          <span class="art-cat">Respiratorio</span>
+        </div>
+        <div class="art-body">
+          <span class="art-tag">Guía completa</span>
+          <h3 class="art-title">Índice de pólenes: qué significa cada nivel y cómo protegerte esta temporada</h3>
+          <p class="art-excerpt">Los niveles de pólenes en España pueden variar de 10 a 3.000 granos/m³ según la especie y la zona. Entender qué mide el índice — y qué plantas son las más agresivas en cada mes — cambia completamente la estrategia de prevención y el uso de tus productos.</p>
+          <div class="art-meta">
+            <span class="art-time">⏱ 6 min de lectura</span>
+            <a href="articulo-polenes.html" class="art-link">Leer el artículo →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artículo 2 -->
+      <div class="articulo fade-up delay-1">
+        <div class="art-img">
+          <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80"
+               alt="Purificador de aire en salón moderno" loading="lazy"/>
+          <span class="art-cat">Hogar</span>
+        </div>
+        <div class="art-body">
+          <span class="art-tag">Comparativa</span>
+          <h3 class="art-title">5 errores al elegir un purificador de aire (y cuál sí funciona contra ácaros)</h3>
+          <p class="art-excerpt">HEPA no es igual a HEPA certificado. El tamaño de la sala importa más que el precio. Te explicamos qué parámetros leer — y cuáles ignorar.</p>
+          <div class="art-meta">
+            <span class="art-time">⏱ 4 min</span>
+            <a href="articulo-purificador.html" class="art-link">Leer →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artículo 3 -->
+      <div class="articulo fade-up delay-2">
+        <div class="art-img">
+          <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=80"
+               alt="Dormitorio limpio y ordenado sin alérgenos" loading="lazy"/>
+          <span class="art-cat">Noche segura</span>
+        </div>
+        <div class="art-body">
+          <span class="art-tag">Protocolo práctico</span>
+          <h3 class="art-title">El protocolo de 15 minutos para reducir los alérgenos del dormitorio</h3>
+          <p class="art-excerpt">No hace falta hacer una limpieza profunda cada día. Con una rutina de 15 minutos y los productos correctos, puedes reducir la carga alergénica un 60%.</p>
+          <div class="art-meta">
+            <span class="art-time">⏱ 3 min</span>
+            <a href="articulo-dormitorio.html" class="art-link">Leer →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ CTA FINAL ═══ -->
+  <section class="cta-final" id="cta">
+    <!-- Decorative spiral -->
+    <svg class="cta-spiral" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="300" cy="300" r="260" stroke="white" stroke-width="1"/>
+      <circle cx="300" cy="300" r="200" stroke="white" stroke-width="1"/>
+      <circle cx="300" cy="300" r="140" stroke="white" stroke-width="1"/>
+      <circle cx="300" cy="300" r="80" stroke="white" stroke-width="1"/>
+      <path d="M300 40 C440 40 560 160 560 300 C560 440 440 560 300 560 C160 560 40 440 40 300 C40 185 120 90 220 55"
+            stroke="white" stroke-width="0.5" fill="none"/>
+    </svg>
+
+    <span class="section-eyebrow fade-up">Únete antes de que abramos</span>
+    <h2 class="cta-title fade-up delay-1">
+      Sé el primero en acceder.<br/>
+      <em>Acceso prioritario + ventajas de lanzamiento.</em>
+    </h2>
+    <p class="cta-sub fade-up delay-2">
+      Abrimos en septiembre de 2026. Las personas en lista de espera reciben acceso anticipado,
+      precio especial en el primer pedido y acceso al Club desde el día uno.
+    </p>
+
+    <div class="form-wrap fade-up delay-2">
+      <div>
+        <div class="form-row" id="form-hero">
+          <input type="email" placeholder="tu@email.com" id="email-hero" autocomplete="email" />
+          <button onclick="handleSubmit('email-hero','form-hero','success-hero')">Apuntarme →</button>
+        </div>
+        <div class="form-success" id="success-hero">
+          ✓ &nbsp;Apuntado. Te avisamos antes que a nadie cuando abramos.
+        </div>
+        <p class="form-note">Sin spam. Solo te escribimos cuando algo vale la pena.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <img src="logo.png" class="footer-brand-icon" alt="" aria-hidden="true" />
+      <div class="footer-brand-text">
+        <span class="footer-logo">Mundo Alergia</span>
+        <span class="footer-tag">Seleccionamos. Tú respiras.</span>
+      </div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#">Tienda</a></li>
+      <li><a href="#">Club</a></li>
+      <li><a href="#">Consultas</a></li>
+      <li><a href="#">Contenido</a></li>
+      <li><a href="#">Privacidad</a></li>
+    </ul>
+    <span class="footer-copy">© 2026 Mundo Alergia · mundoalergia.es</span>
+  </footer>
+
+  <script>
+    // ── Nav scroll behavior ──
+    const nav = document.getElementById('nav');
+    const announce = document.getElementById('announce');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // ── Fade-in on scroll ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Form submit ──
+    function handleSubmit(inputId, formId, successId) {
+      const email = document.getElementById(inputId).value.trim();
+      if (!email || !email.includes('@')) {
+        document.getElementById(inputId).focus();
+        document.getElementById(inputId).style.borderColor = 'rgba(226,119,95,0.7)';
+        return;
+      }
+      fetch('https://formspree.io/f/xrevvber', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      .then(() => {
+        document.getElementById(formId).style.display = 'none';
+        document.getElementById(successId).style.display = 'flex';
+      })
+      .catch(() => {
+        document.getElementById(formId).style.display = 'none';
+        document.getElementById(successId).style.display = 'flex';
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      if (document.activeElement.id === 'email-hero') {
+        handleSubmit('email-hero', 'form-hero', 'success-hero');
+      }
+    });
+
+    // ── Carruseles de categorías ──
+    // Next.js: reemplazar con Embla Carousel ('use client')
+    // Storefront API: ver comentario HTML en sección #categorias
+    function initCarousel(trackId, prevId, nextId, pillsId, total) {
+      const track   = document.getElementById(trackId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      const pills   = document.getElementById(pillsId)
+                        ? Array.from(document.getElementById(pillsId).querySelectorAll('.ccnav'))
+                        : [];
+      if (!track) return;
+      let active = 0;
+
+      function slideW() {
+        const s = track.querySelector('.cat-slide');
+        return s ? s.offsetWidth + 3 : 0;
+      }
+      function visible() {
+        return window.innerWidth >= 960 ? 3 : window.innerWidth >= 600 ? 2 : 1;
+      }
+      function goTo(idx) {
+        active = Math.max(0, Math.min(total - 1, idx));
+        track.scrollTo({ left: active * slideW(), behavior: 'smooth' });
+        sync();
+      }
+      function sync() {
+        pills.forEach((el, i) => el.classList.toggle('active', i === active));
+        const pill = pills[active];
+        if (pill) pill.scrollIntoView({ inline: 'nearest', behavior: 'smooth', block: 'nearest' });
+        if (prevBtn) prevBtn.disabled = active === 0;
+        if (nextBtn) nextBtn.disabled = active >= total - visible();
+      }
+      pills.forEach((el, i) => el.addEventListener('click', () => goTo(i)));
+      if (prevBtn) prevBtn.addEventListener('click', () => goTo(active - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goTo(active + 1));
+      let t;
+      track.addEventListener('scroll', () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          const w = slideW();
+          if (w > 0) {
+            const idx = Math.round(track.scrollLeft / w);
+            if (idx !== active) { active = idx; sync(); }
+          }
+        }, 80);
+      }, { passive: true });
+      sync();
+    }
+
+    initCarousel('track-a', 'prev-a', 'next-a', 'pills-a', 3);
+    initCarousel('track-b', 'prev-b', 'next-b', 'pills-b', 9);
+
+    // ── Smooth scroll para navegación ──
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const offset = nav.offsetHeight + 16;
+        window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>

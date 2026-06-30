@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Índice de pólenes: qué significa cada nivel — Mundo Alergia</title>
+  <meta name="description" content="Los niveles de pólenes en España pueden variar de 10 a más de 3.000 granos/m³. Entendemos qué mide el índice, qué plantas son más agresivas y cómo actuar."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --verde:#1A1512;--carbon:#9A5353;--terra:#E2775F;
+      --niebla:#FFF3E9;--crema:#FAF4EF;--borde:#EEE0D6;
+      --texto:#1A1512;--sub:#7A5248;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Montserrat',sans-serif;background:var(--crema);color:var(--texto);-webkit-font-smoothing:antialiased}
+
+    nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;background:rgba(26,21,18,0.97);backdrop-filter:blur(16px)}
+    .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .logo img{width:34px;height:34px;object-fit:contain}
+    .logo-wordmark{display:flex;flex-direction:column;gap:2px}
+    .logo-main{font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.28em;color:white;text-transform:uppercase}
+    .logo-top{font-size:0.5rem;font-weight:400;letter-spacing:0.16em;color:rgba(255,255,255,0.35);text-transform:uppercase}
+    .nav-links{display:flex;align-items:center;gap:30px;list-style:none}
+    .nav-links a{font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.6);text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:white}
+    .nav-cta{color:var(--verde)!important;background:var(--terra);padding:8px 18px;border-radius:3px}
+
+    /* HERO */
+    .article-hero{position:relative;height:420px;overflow:hidden}
+    .article-hero img{width:100%;height:100%;object-fit:cover}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,14,8,0.15) 0%,rgba(10,14,8,0.7) 100%)}
+    .hero-content{position:absolute;bottom:0;left:0;right:0;padding:40px 8%}
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:0.62rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:12px}
+    .breadcrumb a{color:rgba(255,255,255,0.5);text-decoration:none}
+    .breadcrumb a:hover{color:white}
+    .breadcrumb span{color:rgba(255,255,255,0.25)}
+    .article-cat{display:inline-block;font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--terra);color:white;padding:4px 12px;border-radius:20px;margin-bottom:14px}
+    .article-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:300;color:white;line-height:1.15;max-width:720px}
+    .article-meta{display:flex;align-items:center;gap:20px;margin-top:16px}
+    .article-meta span{font-size:0.65rem;color:rgba(255,255,255,0.45)}
+
+    /* CONTENIDO */
+    .article-layout{display:grid;grid-template-columns:1fr 340px;gap:60px;padding:60px 6% 80px;max-width:1500px;margin:0 auto}
+    .article-body h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--verde);margin:36px 0 12px;line-height:1.2}
+    .article-body h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--carbon);margin:28px 0 8px}
+    .article-body p{font-size:0.92rem;line-height:1.9;color:var(--texto);margin-bottom:16px}
+    .article-body strong{color:var(--verde);font-weight:600}
+    .article-body em{font-style:italic;color:var(--sub)}
+
+    /* TABLA NIVEL */
+    .level-table{width:100%;border-collapse:collapse;margin:24px 0;border-radius:8px;overflow:hidden;font-size:0.8rem}
+    .level-table th{background:var(--verde);color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase}
+    .level-table td{padding:12px 16px;border-bottom:1px solid var(--borde);vertical-align:top}
+    .level-table tr:last-child td{border-bottom:none}
+    .level-table tr:nth-child(even) td{background:rgba(210,225,224,0.2)}
+    .nivel-chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.65rem;font-weight:700;letter-spacing:0.06em}
+    .nivel-muy-bajo{background:#D1EDD8;color:#2A6B3A}
+    .nivel-bajo{background:#E8F5C8;color:#4A7A28}
+    .nivel-moderado{background:#FFF3C4;color:#8A6D00}
+    .nivel-alto{background:#FFE0C0;color:#A04A00}
+    .nivel-muy-alto{background:#FFD0C0;color:#8A1500}
+
+    /* CALENDARIO */
+    .cal-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin:20px 0}
+    .cal-month{font-size:0.52rem;font-weight:700;text-transform:uppercase;color:var(--sub);text-align:center;padding:4px 2px}
+    .cal-bar{height:8px;border-radius:2px}
+    .cal-plant{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:0.78rem;color:var(--texto)}
+    .cal-label{min-width:90px;font-size:0.7rem;font-weight:600}
+    .cal-bar-wrapper{flex:1;display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+    .b-active{background:var(--terra)}
+    .b-peak{background:#A84B2A}
+    .b-none{background:var(--borde)}
+
+    /* CALLOUT */
+    .callout{background:var(--niebla);border-left:4px solid var(--carbon);border-radius:0 8px 8px 0;padding:20px 20px 16px;margin:24px 0}
+    .callout-title{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--carbon);margin-bottom:8px}
+    .callout p{font-size:0.82rem;margin:0;color:var(--carbon)}
+
+    .callout-terra{background:#FAE8DC;border-left-color:var(--terra)}
+    .callout-terra .callout-title{color:var(--terra)}
+    .callout-terra p{color:#5C3A2A}
+
+    /* SIDEBAR */
+    .sidebar{position:sticky;top:84px;align-self:start}
+    .sidebar-card{background:white;border:1px solid var(--borde);border-radius:12px;padding:24px;margin-bottom:20px}
+    .sidebar-card h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--verde);margin-bottom:12px}
+    .sidebar-card p{font-size:0.78rem;color:var(--sub);line-height:1.7;margin-bottom:14px}
+    .sidebar-card .btn{display:block;background:var(--terra);color:white;text-decoration:none;text-align:center;padding:12px;border-radius:6px;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:background .2s}
+    .sidebar-card .btn:hover{background:#C45A40}
+    .sidebar-card .btn-outline{background:transparent;color:var(--terra);border:1.5px solid var(--terra);margin-top:8px}
+    .sidebar-card .btn-outline:hover{background:var(--terra);color:white}
+
+    .product-rec{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--borde)}
+    .product-rec:last-child{border-bottom:none}
+    .product-rec-img{width:48px;height:48px;border-radius:6px;background:var(--niebla);flex-shrink:0;object-fit:cover}
+    .product-rec-info{flex:1}
+    .product-rec-name{font-size:0.75rem;font-weight:600;color:var(--texto);margin-bottom:2px}
+    .product-rec-sub{font-size:0.65rem;color:var(--sub)}
+
+    /* TOC */
+    .toc{background:var(--crema);border:1px solid var(--borde);border-radius:12px;padding:20px;margin-bottom:28px}
+    .toc-title{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--sub);margin-bottom:12px}
+    .toc ol{padding-left:16px}
+    .toc li{font-size:0.78rem;color:var(--carbon);margin-bottom:6px}
+    .toc a{color:var(--carbon);text-decoration:none}
+    .toc a:hover{color:var(--terra)}
+
+    /* FOOTER */
+    footer{background:#100D0A;padding:40px 8%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    .footer-logo{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-transform:uppercase}
+    .footer-links{display:flex;gap:24px;list-style:none}
+    .footer-links a{font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:rgba(255,255,255,0.7)}
+    .footer-copy{font-size:0.62rem;color:rgba(255,255,255,0.18)}
+
+    @media(max-width:1024px){.article-layout{grid-template-columns:1fr}.sidebar{position:static}.nav-links{display:none}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">
+    <img src="logo.png" alt="Mundo Alergia"/>
+    <div class="logo-wordmark">
+      <span class="logo-main">Mundo Alergia</span>
+      <span class="logo-top">Seleccionamos. Tú respiras.</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#categorias">Tienda</a></li>
+    <li><a href="index.html#como">Oriéntame</a></li>
+    <li><a href="index.html#club">Club</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="index.html#consultas">Consultas médicas</a></li>
+    <li><a href="index.html#cta" class="nav-cta">Acceso anticipado</a></li>
+  </ul>
+</nav>
+
+<div class="article-hero">
+  <img src="https://images.unsplash.com/photo-1457530378978-8bac673b8062?w=1600&q=80" alt="Árboles en flor — temporada de pólenes en España"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="articulos.html">Artículos</a>
+      <span>›</span>
+      <span>Respiratorio</span>
+    </div>
+    <span class="article-cat">Respiratorio · Temporada</span>
+    <h1>Índice de pólenes: qué significa cada nivel y cómo protegerte esta temporada</h1>
+    <div class="article-meta">
+      <span>⏱ 6 min de lectura</span>
+      <span>Revisado por especialista en alergología</span>
+      <span>Temporada 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="article-layout">
+  <article class="article-body">
+
+    <div class="toc">
+      <div class="toc-title">En este artículo</div>
+      <ol>
+        <li><a href="#que-mide">Qué mide realmente el índice de pólenes</a></li>
+        <li><a href="#niveles">Los niveles y qué significan</a></li>
+        <li><a href="#calendario">Calendario por planta en España</a></li>
+        <li><a href="#como-actuar">Cómo actuar según el nivel</a></li>
+        <li><a href="#productos">Productos que ayudan</a></li>
+      </ol>
+    </div>
+
+    <h2 id="que-mide">Qué mide realmente el índice de pólenes</h2>
+    <p>El índice de pólenes expresa la <strong>concentración de granos de polen por metro cúbico de aire</strong> (granos/m³), medida durante 24 horas en estaciones de captación distribuidas por todo el territorio nacional. En España, la Red Española de Aerobiología (REA) coordina más de 50 puntos de muestreo.</p>
+    <p>El captador más extendido es el <strong>volumétrico de tipo Hirst</strong>: aspira aire a 10 litros por minuto sobre una cinta cubierta de vaselina que queda expuesta durante 7 días. Un técnico cuenta después los granos bajo microscopio óptico e identifica el tipo de planta. Es un proceso lento —los datos del lunes suelen publicarse el miércoles— que explica por qué las apps de pólenes en tiempo real se basan en modelos predictivos, no en recuentos directos.</p>
+
+    <div class="callout">
+      <div class="callout-title">Por qué importa el tipo de planta, no solo el número</div>
+      <p>No todos los pólenes son iguales. 50 granos/m³ de gramíneas son mucho más agresivos para un alérgico que 300 granos/m³ de pino, porque la alergenicidad depende de las proteínas de la cubierta exterior del grano, no de su tamaño. El índice total es orientativo; el desglose por especie es lo que realmente importa.</p>
+    </div>
+
+    <h2 id="niveles">Los niveles y qué significan</h2>
+    <p>La clasificación internacional de la REA y SEAIC divide la concentración atmosférica en cinco tramos. Los umbrales varían ligeramente según la planta: lo que se indica aquí corresponde a gramíneas, el grupo de mayor prevalencia en España.</p>
+
+    <table class="level-table">
+      <thead>
+        <tr>
+          <th>Nivel</th>
+          <th>Granos/m³ (gramíneas)</th>
+          <th>Síntomas esperables</th>
+          <th>Qué hacer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="nivel-chip nivel-muy-bajo">Muy bajo</span></td>
+          <td>&lt; 10</td>
+          <td>Ninguno o muy leves en personas muy sensibles</td>
+          <td>Actividad normal. Irrigación nasal preventiva</td>
+        </tr>
+        <tr>
+          <td><span class="nivel-chip nivel-bajo">Bajo</span></td>
+          <td>10–50</td>
+          <td>Estornudos ocasionales, mínimo picor</td>
+          <td>Considerar antihistamínico si hay exposición prolongada</td>
+        </tr>
+        <tr>
+          <td><span class="nivel-chip nivel-moderado">Moderado</span></td>
+          <td>50–300</td>
+          <td>Síntomas claros en la mayoría de alérgicos</td>
+          <td>Medicación pautada, ventanas cerradas mediodía</td>
+        </tr>
+        <tr>
+          <td><span class="nivel-chip nivel-alto">Alto</span></td>
+          <td>300–1.000</td>
+          <td>Síntomas intensos, posible afectación bronquial</td>
+          <td>Evitar exterior 10h–17h, purificador en casa</td>
+        </tr>
+        <tr>
+          <td><span class="nivel-chip nivel-muy-alto">Muy alto</span></td>
+          <td>&gt; 1.000</td>
+          <td>Crisis posibles, asma bronquial en susceptibles</td>
+          <td>Restricción de actividad exterior, consultar médico</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><em>Nota: para olivo, los umbrales son más bajos (nivel alto = &gt;200); para parietaria, &gt;50 ya produce síntomas intensos en alérgicos. La consulta con tu alergólogo para conocer tu perfil específico es fundamental.</em></p>
+
+    <h2 id="calendario">Calendario por planta en España</h2>
+    <p>España tiene una distribución geográfica muy heterogénea: el ciprés florece en enero en Andalucía mientras Madrid todavía está sin pólenes. A continuación el calendario orientativo para el <strong>centro-norte peninsular</strong> —el más representativo para la mayoría de la población—, indicando meses de actividad (naranja) y pico máximo (marrón oscuro).</p>
+
+    <div style="overflow-x:auto;margin:20px 0">
+      <div style="display:grid;grid-template-columns:100px repeat(12,1fr);gap:3px;align-items:center;font-size:0.68rem;min-width:580px">
+        <div></div>
+        <div class="cal-month">E</div><div class="cal-month">F</div><div class="cal-month">M</div>
+        <div class="cal-month">A</div><div class="cal-month">M</div><div class="cal-month">J</div>
+        <div class="cal-month">J</div><div class="cal-month">A</div><div class="cal-month">S</div>
+        <div class="cal-month">O</div><div class="cal-month">N</div><div class="cal-month">D</div>
+
+        <div style="font-weight:600;color:var(--carbon)">Ciprés</div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-peak"></div><div class="cal-bar b-peak"></div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-active"></div>
+
+        <div style="font-weight:600;color:var(--carbon)">Plátano</div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-active"></div>
+        <div class="cal-bar b-peak"></div><div class="cal-bar b-active"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+
+        <div style="font-weight:600;color:var(--carbon)">Gramíneas</div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-peak"></div><div class="cal-bar b-peak"></div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+
+        <div style="font-weight:600;color:var(--carbon)">Olivo</div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-peak"></div><div class="cal-bar b-peak"></div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+
+        <div style="font-weight:600;color:var(--carbon)">Parietaria</div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-active"></div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-active"></div><div class="cal-bar b-peak"></div>
+        <div class="cal-bar b-peak"></div><div class="cal-bar b-active"></div><div class="cal-bar b-active"></div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+
+        <div style="font-weight:600;color:var(--carbon)">Artemisia</div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+        <div class="cal-bar b-active"></div><div class="cal-bar b-peak"></div><div class="cal-bar b-active"></div>
+        <div class="cal-bar b-none"></div><div class="cal-bar b-none"></div><div class="cal-bar b-none"></div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:10px;font-size:0.65rem;color:var(--sub)">
+        <span><span style="display:inline-block;width:12px;height:8px;background:var(--terra);border-radius:2px;vertical-align:middle;margin-right:4px"></span>Actividad</span>
+        <span><span style="display:inline-block;width:12px;height:8px;background:#A84B2A;border-radius:2px;vertical-align:middle;margin-right:4px"></span>Pico máximo</span>
+      </div>
+    </div>
+
+    <h2 id="como-actuar">Cómo actuar según el nivel</h2>
+
+    <h3>Días de nivel moderado–alto</h3>
+    <p>Las concentraciones de pólenes son más altas entre las <strong>10:00 y las 17:00 horas</strong>, cuando el calor hace ascender las partículas. La estrategia más eficaz es estructurar las actividades exteriores —deporte, recados, paseos— a primera hora de la mañana o después de las 19:00.</p>
+    <p>Si tienes que salir en horas pico, las <strong>gafas de sol envolventes</strong> reducen el contacto directo con la conjuntiva. Al llegar a casa, cámbiate de ropa y lávate el pelo si has estado en espacios abiertos: el pelo retiene una cantidad significativa de granos.</p>
+
+    <h3>En casa</h3>
+    <p>Ventila antes de las 7:00 AM o después de las 20:00 PM. Mantén las ventanas cerradas en las horas centrales del día, especialmente si vives cerca de parques o jardines. Un <strong>purificador con filtro HEPA H13</strong> en el dormitorio garantiza que las 8 horas de sueño se hacen en aire filtrado.</p>
+    <p>La <strong>irrigación nasal</strong> después de regresar a casa —antes de ducharte— arrastra mecánicamente los granos que se han depositado en la mucosa y reduce la carga alergénica inhalada durante el día. Es uno de los gestos con mayor relación evidencia/coste.</p>
+
+    <div class="callout callout-terra">
+      <div class="callout-title">Qué dice la evidencia sobre la irrigación nasal</div>
+      <p>Una revisión Cochrane (2016, 787 participantes) concluye que la irrigación nasal con solución salina isotónica reduce significativamente los síntomas de rinitis alérgica y el consumo de medicación en los grupos tratados frente a placebo. El efecto es dosis-dependiente: dos irrigaciones diarias producen mejor respuesta que una.</p>
+    </div>
+
+    <h3>El día siguiente a la lluvia</h3>
+    <p>Hay una creencia popular de que la lluvia limpia el ambiente y que el día posterior es seguro. <strong>Es parcialmente falso.</strong> La lluvia sí retira temporalmente los pólenes del aire. Pero las esporas de hongos —otro desencadenante frecuente— proliferan en la humedad, y en algunas plantas como las gramíneas, la lluvia fragmenta los granos en partículas ultrafinas que penetran más profundamente en el árbol bronquial. El día post-lluvia puede ser especialmente agresivo para personas con asma.</p>
+
+    <h2 id="productos">Productos que ayudan en temporada de pólenes</h2>
+    <p>Desde Mundo Alergia seleccionamos solo productos con eficacia documentada. Para la temporada de pólenes, los más útiles son los de la categoría de <strong>cuidado nasal</strong>: soluciones salinas isotónicas e hipertónicas, pulverizadores nasales nasales de barrera, y filtros nasales.</p>
+    <p>Los purificadores de la categoría <strong>hogar sin alérgeno</strong> complementan la acción al garantizar que el aire interior permanece limpio durante las horas en que permaneces en casa.</p>
+
+  </article>
+
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <h3>¿Cuál es tu perfil de alergia?</h3>
+      <p>Una videollamada de 15 minutos con un especialista puede darte un plan de acción personalizado para esta temporada.</p>
+      <a href="index.html#consultas" class="btn">Reservar consulta — 15 min</a>
+      <a href="index.html#club" class="btn btn-outline">Unirme al Club (gratis)</a>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Productos relacionados</h3>
+      <div class="product-rec">
+        <img class="product-rec-img" src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=100&q=80" alt="Irrigador nasal"/>
+        <div class="product-rec-info">
+          <div class="product-rec-name">Irrigador nasal isotónico</div>
+          <div class="product-rec-sub">Cuidado nasal · ⭐ 4.8</div>
+        </div>
+      </div>
+      <div class="product-rec">
+        <img class="product-rec-img" src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=100&q=80" alt="Purificador HEPA"/>
+        <div class="product-rec-info">
+          <div class="product-rec-name">Purificador HEPA H13</div>
+          <div class="product-rec-sub">Hogar · ⭐ 4.9</div>
+        </div>
+      </div>
+      <a href="index.html#categorias" class="btn" style="margin-top:14px">Ver todos los productos</a>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Artículos relacionados</h3>
+      <p style="font-size:0.75rem;color:var(--sub);margin-bottom:6px"><a href="articulo-irrigacion.html" style="color:var(--terra);text-decoration:none">→ Irrigación nasal: la guía completa</a></p>
+      <p style="font-size:0.75rem;color:var(--sub);margin-bottom:6px"><a href="articulo-purificador.html" style="color:var(--terra);text-decoration:none">→ 5 errores al elegir un purificador</a></p>
+      <p style="font-size:0.75rem;color:var(--sub)"><a href="articulo-dormitorio.html" style="color:var(--terra);text-decoration:none">→ Protocolo del dormitorio sin alérgenos</a></p>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <span class="footer-logo">Mundo Alergia</span>
+  <ul class="footer-links">
+    <li><a href="index.html#categorias">Tienda</a></li>
+    <li><a href="index.html#club">Club</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="index.html#consultas">Consultas médicas</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 Mundo Alergia · mundoalergia.es</span>
+</footer>
+
+</body>
+</html>
