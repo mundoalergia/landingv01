@@ -1526,28 +1526,211 @@
       .form-row button { padding: 14px; }
       .announce { font-size: 0.65rem; }
     }
+
+    /* ════════════════════════════════════
+       RESPONSIVE TABLET (≤768px)
+       Ajustes de padding vertical y layout
+       de secciones intermedias
+    ════════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* Padding vertical: de 100px a 70px en tablet */
+      .como    { padding: 70px 6%; }
+      .club    { padding: 70px 6%; }
+      .prods   { padding: 70px 6%; }
+      .consultas { padding: 70px 6%; }
+      .vs-section { padding: 70px 6%; }
+      .contenido { padding: 70px 6%; }
+      .cta-final { padding: 80px 6%; }
+
+      /* Hero: reducir padding top cuando nav+announce = ~100px */
+      .hero-content { padding: 104px 6% 72px; }
+      .hero-sub { font-size: 0.9rem; }
+
+      /* Hero paths: forzar columna en pantallas intermedias */
+      .hero-paths { flex-direction: column; gap: 10px; }
+      .hero-path  { min-width: unset; }
+
+      /* Cat pills: target táctil mínimo 44px (WCAG 2.5.5) */
+      .ccnav { min-height: 44px; font-size: 0.64rem; padding: 0 12px; }
+      .ccnav-num { font-size: 0.58rem; }
+
+      /* Consultas: imagen debajo del texto en tablet */
+      .consultas-inner { grid-template-columns: 1fr; gap: 36px; }
+      .consultas-img   { order: 2; max-height: 300px; }
+
+      /* Reviews grid */
+      .reviews-grid { grid-template-columns: 1fr; }
+
+      /* Footer */
+      footer { padding: 40px 6%; text-align: center; justify-items: center; }
+      .footer-brand { justify-content: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+
+      /* Section headers con "ver todo" */
+      .productos-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .contenido-header  { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+
+    /* ════════════════════════════════════
+       RESPONSIVE MÓVIL (≤480px)
+       Ajuste fino para pantallas pequeñas
+    ════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .hero-content { padding: 90px 5% 60px; }
+      .como, .club, .prods, .consultas, .vs-section, .contenido { padding: 60px 5%; }
+      .cta-final { padding: 60px 5%; }
+
+      /* Anuncio: ocultar enlace si muy pequeño, conservar texto */
+      .announce a { display: none; }
+
+      /* Hero stats: dos columnas 2×2 */
+      .hero-stat { flex: 1 1 calc(50% - 12px); min-width: 120px; }
+
+      /* Carrusel: mostrar 1 slide con pista del siguiente */
+      .cat-slide { flex: 0 0 calc(90% - 1.5px); }
+
+      /* Club benefits: icono + texto bien alineados */
+      .benefit-icon { font-size: 1.2rem; width: 32px; height: 32px; }
+
+      /* CTA form: button full width */
+      .form-row button { width: 100%; }
+
+      /* Footer: todo centrado */
+      footer { grid-template-columns: 1fr; text-align: center; }
+      .footer-brand { justify-content: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; gap: 14px; }
+      .footer-copy  { text-align: center; }
+    }
+
+    /* ════════════════════════════════════
+       MOBILE NAV DRAWER
+    ════════════════════════════════════ */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 310;
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .nav-burger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: white;
+      border-radius: 2px;
+      transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
+      transform-origin: center;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 260;
+      background: var(--verde);
+      display: flex;
+      flex-direction: column;
+      padding: 86px 8% 60px;
+      transform: translateX(100%);
+      transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
+      overflow-y: auto;
+      visibility: hidden;
+    }
+    .nav-drawer.open { transform: translateX(0); visibility: visible; }
+
+    .nav-drawer a {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: white;
+      text-decoration: none;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+      display: block;
+      line-height: 1.1;
+    }
+    .nav-drawer a:hover { color: var(--terra); }
+
+    .nav-drawer-cta {
+      margin-top: 40px;
+      display: block !important;
+      background: var(--terra) !important;
+      color: white !important;
+      text-align: center;
+      padding: 18px !important;
+      border-radius: 4px;
+      font-family: 'Montserrat', sans-serif !important;
+      font-size: 0.78rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase;
+      border-bottom: none !important;
+    }
+    .nav-drawer-cta:hover { background: #C45A40 !important; }
+
+    @media (max-width: 960px) {
+      .nav-burger { display: flex; }
+    }
+
   </style>
 </head>
 
 <body>
 
-  <!-- ANNOUNCEMENT BAR -->
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — ANNOUNCE BAR
+       → sections/announcement-bar.liquid  (enabled: true por defecto)
+       Configuración en customizer:
+         - section.settings.text          → texto del anuncio
+         - section.settings.link_url      → {{ routes.root_url }}#newsletter
+         - section.settings.link_label    → "Apuntarme"
+         - section.settings.bg_color      → color_scheme "primary-dark"
+       Lógica de visibilidad: {% if section.settings.show_bar %}
+  ═══════════════════════════════════════════════════════════ -->
   <div class="announce" id="announce">
     Abrimos en septiembre de 2026 · Únete a la lista de acceso anticipado
     <a href="#cta">Apuntarme →</a>
   </div>
 
-  <!-- NAV -->
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — HEADER / NAV
+       → sections/header.liquid  (theme layout, no section block)
+       Notas de migración:
+         - Logo: {{ shop.name }} + settings.logo (image_picker)
+         - Logo tagline: settings.logo_tagline (text)
+         - Nav links: menú "main-menu" del customizer Shopify
+           {% for link in linklists.main-menu.links %}
+             <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+           {% endfor %}
+         - Botón CTA: settings.nav_cta_label + settings.nav_cta_url
+         - Carrito: {{ cart.item_count }} con {{ routes.cart_url }}
+         - Búsqueda: predictive search API de Shopify
+         - Comportamiento scroll → se reproduce igual en JS
+  ═══════════════════════════════════════════════════════════ -->
   <nav id="nav">
     <a class="logo" href="#">
+      <!-- SHOPIFY: href="{{ routes.root_url }}" -->
+      <!-- SHOPIFY: <img src="{{ settings.logo | image_url: width: 80 }}" alt="{{ shop.name }}"> -->
       <img src="logo.png" class="logo-spiral" alt="Mundo Alergia" />
       <div class="logo-wordmark">
-        <span class="logo-main">Mundo Alergia</span>
-        <span class="logo-top">Seleccionamos. Tú respiras.</span>
+        <span class="logo-main">Mundo Alergia</span><!-- SHOPIFY: {{ shop.name }} -->
+        <span class="logo-top">Seleccionamos. Tú respiras.</span><!-- SHOPIFY: {{ settings.logo_tagline }} -->
       </div>
     </a>
 
     <ul class="nav-links">
+      <!-- SHOPIFY: {% for link in linklists.main-menu.links %}<li><a href="{{ link.url }}">{{ link.title }}</a></li>{% endfor %} -->
       <li><a href="#categorias">Tienda</a></li>
       <li><a href="#como">Oriéntame</a></li>
       <li><a href="#club">Club</a></li>
@@ -1555,11 +1738,38 @@
       <li><a href="#consultas">Consultas médicas</a></li>
       <li><a href="#cta" class="nav-cta">Acceso anticipado</a></li>
     </ul>
-  </nav>
+  
+  <button class="nav-burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
+<div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menú">
+  <a href="#categorias">Tienda</a>
+  <a href="#como">Oriéntame</a>
+  <a href="#club">Club</a>
+  <a href="articulos.html">Artículos</a>
+  <a href="#consultas">Consultas médicas</a>
+  <a href="#cta" class="nav-drawer-cta">Acceso anticipado</a>
+</div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — HERO BANNER
+       → sections/hero-banner.liquid
+       Settings del customizer:
+         - section.settings.hero_image       → image_picker (con focal point)
+         - section.settings.hero_eyebrow     → text  "Seleccionamos. Tú respiras."
+         - section.settings.hero_title       → richtext
+         - section.settings.hero_subtitle    → textarea
+         - section.settings.path1_url        → url  (recomendador o quiz Shopify)
+         - section.settings.path2_label      → text
+         - section.settings.path2_url        → url  → {{ routes.collections_url }}
+       Quiz/recomendador: migrar a app de quiz (ej. Quizell, Octane AI)
+       o página /pages/orientame con form Liquid
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ HERO ═══ -->
   <section class="hero">
-    <!-- Video background — reemplaza con tu propio vídeo si es necesario -->
+    <!-- SHOPIFY: <img src="{{ section.settings.hero_image | image_url: width: 1920 }}" ...> -->
     <!-- Hero image — madre cuidando a su hija -->
     <div class="hero-video" style="background-image:url('https://images.unsplash.com/photo-1551642465-6e7e5b2f10fa?w=1920&q=85&auto=format&fit=crop'); background-size:cover; background-position:center 30%;"></div>
     <div class="hero-overlay"></div>
@@ -1625,6 +1835,34 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — CATEGORÍAS (dos carruseles)
+       → sections/featured-collections.liquid
+       Arquitectura en Shopify:
+         Carrusel A "En tienda" — 3 colecciones reales:
+           {% assign collections_live = 'nasal-respiratorio,noche-segura,hogar-sin-alergeno' | split: ',' %}
+           {% for handle in collections_live %}
+             {% assign col = collections[handle] %}
+             <div class="cat-slide">
+               <img src="{{ col.image | image_url: width:800 }}" alt="{{ col.title }}">
+               <h3>{{ col.title }}</h3>
+               <a href="{{ col.url }}">Ver productos</a>
+             </div>
+           {% endfor %}
+
+         Carrusel B "Próximamente" — colecciones con metafield custom.coming_soon = true
+           {% for collection in collections %}
+             {% if collection.metafields.custom.coming_soon %}
+               ... cat-slide.is-coming ...
+             {% endif %}
+           {% endfor %}
+
+         JS initCarousel → migrar a Embla Carousel (npm) en el theme JS bundle
+         Nota: scroll-snap nativo funciona bien; Embla añade accesibilidad + API
+
+       Next.js (si hay headless): usar Shopify Storefront API
+         query { collections(first:20) { nodes { title handle image { url } } } }
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ CATEGORÍAS — por problema ═══ -->
   <section class="categorias" id="categorias">
     <span class="section-eyebrow fade-up">Tu problema, tu solución</span>
@@ -1961,6 +2199,25 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — CLUB DE MIEMBROS
+       → sections/club-membership.liquid
+       El Club en Shopify = Shopify Customer Account (gratis)
+         - Registro:  {{ routes.account_register_url }}
+         - Login:     {{ routes.account_login_url }}
+         - Cuenta:    {{ routes.account_url }}
+         - Estado:    {% if customer %}miembro{% else %}no registrado{% endif %}
+       Precios exclusivos: usar Discount Groups (B2B) o app Price Lists
+         - App sugerida: Wholesale Gorilla / Locksmith
+       Beneficios: configurar como section.blocks (type: benefit)
+         {% for block in section.blocks %}
+           <li class="club-benefit">
+             <div class="benefit-icon">{{ block.settings.icon }}</div>
+             <div><strong>{{ block.settings.title }}</strong> {{ block.settings.text }}</div>
+           </li>
+         {% endfor %}
+       IMPORTANTE: El Club es GRATUITO — no usar Shopify Memberships de pago
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ CLUB ═══ -->
   <section class="club" id="club">
     <div class="club-inner">
@@ -2044,6 +2301,20 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — PRODUCTOS DESTACADOS
+       → sections/featured-products.liquid
+       En Shopify Dawn/custom theme:
+         {% assign featured = section.settings.collection %}
+         {% for product in featured.products limit: section.settings.products_to_show %}
+           {{ product.title }} · {{ product.price | money }} · {{ product.url }}
+         {% endfor %}
+       - "prod-cat-tag" → primer tag del producto (product.tags.first)
+       - "ratings" → metafield: product.metafields.reviews.rating (app Okendo/Judge.me)
+       - "precio-pub" → product.compare_at_price | money
+       - "precio-club" → product.price | money  +  badge si customer.tags contiene 'club'
+       - "prod-btn" → botón Add to Cart con {{ product.variants.first.id }}
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ PRODUCTOS DESTACADOS ═══ -->
   <section class="productos" id="productos">
     <div class="productos-header">
@@ -2181,6 +2452,21 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — CONSULTAS MÉDICAS
+       → sections/medical-consultation.liquid
+       Las consultas son un servicio EXTERNO de pago (no producto Shopify).
+       Opciones de integración:
+         A) Shopify Draft Order / producto tipo "service" → checkout normal
+            {% assign consulta = all_products['consulta-medica-15min'] %}
+            Precio: {{ consulta.price | money }}  ← fijar a precio real
+         B) Booking externo (cal.com, Calendly, Doctolib) → iframe o redirect
+            <a href="{{ section.settings.booking_url }}">Reservar consulta</a>
+       IMPORTANTE: Consulta = PAGO, 15 MINUTOS.
+       El Club ofrece precio reducido (Discount en checkout para customer.tags 'club').
+       - "ficha-preconsulta.html" → /pages/pre-consulta  (Shopify page con metafields)
+       - "consultas-badge" → disponibilidad en tiempo real via booking API
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ CONSULTAS MÉDICAS ═══ -->
   <section class="consultas" id="consultas">
     <div class="consultas-inner">
@@ -2228,6 +2514,16 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — VS / POR QUÉ NOSOTROS
+       → sections/why-us.liquid
+       Contenido estático en theme editor (schema settings):
+         - vs-quote → settings.quote_text  (textarea)
+         - vs-source → settings.quote_author  (text)
+         - Filas vs → blocks de tipo "comparison_row" (máx. 6)
+           block.settings.them / block.settings.us
+       No requiere API — renderiza con Liquid puro.
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ VS COMPARISON ═══ -->
   <section class="vs-section">
     <div class="vs-inner">
@@ -2270,6 +2566,21 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — BLOG / ARTÍCULOS
+       → sections/blog-preview.liquid
+       Shopify Blogs API:
+         {% assign blog = blogs['contenido'] %}
+         {% for article in blog.articles limit: 3 %}
+           <a href="{{ article.url }}">{{ article.title }}</a>
+           {{ article.excerpt_or_content | strip_html | truncate: 160 }}
+           {{ article.tags | join: ', ' }}   ← "art-cat" y "art-tag"
+           {{ article.read_time }}           ← app metafield o manual
+         {% endfor %}
+       - "featured" article → article.metafields.custom.featured == true
+       - "Ver todos" → {{ blog.url }}  (/blogs/contenido)
+       - Articulo pages: /blogs/contenido/{{ article.handle }}
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ CONTENIDO / ARTÍCULOS ═══ -->
   <section class="contenido" id="contenido">
     <div class="contenido-header">
@@ -2343,6 +2654,17 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — CTA / LISTA DE ESPERA
+       → sections/newsletter-signup.liquid
+       En Shopify reemplazar Formspree por:
+         A) Klaviyo: {% form 'customer' %} + Klaviyo list ID en settings
+         B) Shopify Email: formulario nativo customer subscribe
+         C) Mantener Formspree hasta tener Klaviyo configurado
+       Endpoint actual (prototipo): https://formspree.io/f/xrevvber
+       Lanzamiento: Septiembre 2026 — copy "abrimos en septiembre" ajustable
+       via settings.launch_month (text) en el schema del section.
+  ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ CTA FINAL ═══ -->
   <section class="cta-final" id="cta">
     <!-- Decorative spiral -->
@@ -2379,6 +2701,18 @@
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       SHOPIFY MIGRATION NOTE — FOOTER
+       → layout/theme.liquid  (sección global, no section independiente)
+       - Logo: {{ settings.logo | image_url: width: 60 }} + alt="{{ shop.name }}"
+       - Tagline: settings.footer_tagline (text)
+       - Links: menús Shopify → linklists['footer'].links
+           {% for link in linklists['footer'].links %}
+             <a href="{{ link.url }}">{{ link.title }}</a>
+           {% endfor %}
+       - Copyright: © {{ 'now' | date: '%Y' }} {{ shop.name }} · {{ shop.domain }}
+       - Política de privacidad: {{ routes.policies_path }} o page handle 'privacidad'
+  ═══════════════════════════════════════════════════════════ -->
   <!-- FOOTER -->
   <footer>
     <div class="footer-brand">
@@ -2491,22 +2825,17 @@
       track.addEventListener('scroll', () => {
         clearTimeout(t);
         t = setTimeout(() => {
-          const w = slideW();
-          if (w > 0) {
-            const idx = Math.round(track.scrollLeft / w);
-            if (idx !== active) { active = idx; sync(); }
-          }
+          const w = slideW(); if (w > 0) { const idx = Math.round(track.scrollLeft / w); if (idx !== active) { active = idx; sync(); } }
         }, 80);
       }, { passive: true });
       sync();
     }
-
     initCarousel('track-a', 'prev-a', 'next-a', 'pills-a', 3);
     initCarousel('track-b', 'prev-b', 'next-b', 'pills-b', 9);
 
     // ── Smooth scroll para navegación ──
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-      link.addEventListener('click', (e) => {
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
         const target = document.querySelector(link.getAttribute('href'));
         if (!target) return;
         e.preventDefault();
@@ -2514,6 +2843,27 @@
         window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
       });
     });
+
+    // ── Mobile nav drawer ──
+    (function() {
+      var burger = document.getElementById('navBurger');
+      var drawer = document.getElementById('navDrawer');
+      if (!burger || !drawer) return;
+      function closeDrawer() {
+        burger.classList.remove('open');
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      burger.addEventListener('click', function() {
+        var isOpen = drawer.classList.toggle('open');
+        burger.classList.toggle('open', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+      drawer.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeDrawer);
+      });
+    })();
+
   </script>
 
 </body>

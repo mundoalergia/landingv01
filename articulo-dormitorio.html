@@ -110,6 +110,88 @@
 
     @media(max-width:1024px){.article-layout{grid-template-columns:1fr}.sidebar{position:static}.stat-row{grid-template-columns:1fr 1fr}.nav-links{display:none}}
     @media(max-width:500px){.stat-row{grid-template-columns:1fr}}
+  
+    /* ════════════════════════════════════
+       MOBILE NAV DRAWER
+    ════════════════════════════════════ */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 310;
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .nav-burger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: white;
+      border-radius: 2px;
+      transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
+      transform-origin: center;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 260;
+      background: var(--verde);
+      display: flex;
+      flex-direction: column;
+      padding: 86px 8% 60px;
+      transform: translateX(100%);
+      transition: transform 0.38s cubic-bezier(0.4,0,0.2,1);
+      overflow-y: auto;
+      visibility: hidden;
+    }
+    .nav-drawer.open { transform: translateX(0); visibility: visible; }
+
+    .nav-drawer a {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: white;
+      text-decoration: none;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+      display: block;
+      line-height: 1.1;
+    }
+    .nav-drawer a:hover { color: var(--terra); }
+
+    .nav-drawer-cta {
+      margin-top: 40px;
+      display: block !important;
+      background: var(--terra) !important;
+      color: white !important;
+      text-align: center;
+      padding: 18px !important;
+      border-radius: 4px;
+      font-family: 'Montserrat', sans-serif !important;
+      font-size: 0.78rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.1em !important;
+      text-transform: uppercase;
+      border-bottom: none !important;
+    }
+    .nav-drawer-cta:hover { background: #C45A40 !important; }
+
+    @media (max-width: 960px) {
+      .nav-burger { display: flex; }
+    }
+
   </style>
 </head>
 <body>
@@ -130,7 +212,19 @@
     <li><a href="index.html#consultas">Consultas médicas</a></li>
     <li><a href="index.html#cta" class="nav-cta">Acceso anticipado</a></li>
   </ul>
+
+  <button class="nav-burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menú">
+  <a href="index.html">Inicio</a>
+  <a href="index.html#categorias">Tienda</a>
+  <a href="articulos.html">Artículos</a>
+  <a href="index.html#consultas">Consultas médicas</a>
+  <a href="index.html#cta" class="nav-drawer-cta">Acceso anticipado</a>
+</div>
 
 <div class="article-hero">
   <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1600&q=80" alt="Dormitorio limpio y minimalista sin alérgenos"/>
@@ -329,5 +423,26 @@
   <span class="footer-copy">© 2026 Mundo Alergia · mundoalergia.es</span>
 </footer>
 
+  <script>
+    // ── Mobile nav drawer ──
+    (function() {
+      var burger = document.getElementById('navBurger');
+      var drawer = document.getElementById('navDrawer');
+      if (!burger || !drawer) return;
+      function closeDrawer() {
+        burger.classList.remove('open');
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      burger.addEventListener('click', function() {
+        var isOpen = drawer.classList.toggle('open');
+        burger.classList.toggle('open', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+      drawer.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeDrawer);
+      });
+    })();
+  </script>
 </body>
 </html>
