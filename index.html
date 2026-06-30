@@ -25,16 +25,17 @@
        para evitar que el browser scrollee al hash de la URL al cargar la página */
 
     :root {
-      --verde:    #1A1512;   /* cálido casi negro — hero, footer */
-      --carbon:   #9A5353;   /* arcilla — sección oscura secundaria */
-      --terra:    #E2775F;   /* coral cálido — CTAs primarios */
-      --pizarra:  #FFBC81;   /* melocotón — acentos secundarios */
-      --niebla:   #FFF3E9;   /* arena cálida — fondos claros */
-      --crema:    #FAF4EF;   /* crema cálida — secciones neutras */
-      --blanco:   #FFFFFF;
-      --texto:    #1A1512;
-      --sub:      #7A5248;
-      --borde:    #EEE0D6;
+      --verde:     #1A1512;   /* casi negro cálido — hero, footer */
+      --carbon:    #9A5353;   /* Arcilla — nav, announce, Club, acciones */
+      --terra:     #E2775F;   /* Coral cálido — CTA final, hover */
+      --pizarra:   #696C68;   /* Gris pizarra — Consultas (fondo oscuro neutro) */
+      --melocoton: #FFBC81;   /* Melocotón — badges, tags, acentos cálidos secundarios */
+      --niebla:    #FFF3E9;   /* arena cálida — Oriéntame, Artículos */
+      --crema:     #FAF4EF;   /* crema cálida — Categorías */
+      --blanco:    #FFFFFF;   /* Productos, VS */
+      --texto:     #1A1512;
+      --sub:       #7A5248;
+      --borde:     #EEE0D6;
     }
 
     body {
@@ -50,8 +51,8 @@
        ANNOUNCEMENT BAR
     ════════════════════════════════════ */
     .announce {
-      background: var(--verde);
-      color: var(--niebla);
+      background: var(--carbon);
+      color: rgba(255,255,255,0.9);
       text-align: center;
       padding: 10px 20px;
       font-size: 0.72rem;
@@ -59,7 +60,7 @@
       letter-spacing: 0.08em;
     }
     .announce a {
-      color: var(--terra);
+      color: var(--melocoton);
       text-decoration: none;
       font-weight: 600;
       margin-left: 8px;
@@ -78,14 +79,15 @@
       justify-content: space-between;
       padding: 0 5%;
       height: 64px;
+      background: rgba(154, 83, 83, 0.96);  /* Arcilla */
+      backdrop-filter: blur(12px);
       transition: background 0.4s, top 0.3s, box-shadow 0.3s;
     }
 
     nav.scrolled {
       top: 0;
-      background: rgba(26,21,18,0.97);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.07);
+      background: rgba(140, 72, 72, 0.99);  /* Arcilla ligeramente más oscura */
+      box-shadow: 0 2px 16px rgba(26,21,18,0.25);
     }
 
     .logo {
@@ -101,13 +103,10 @@
       flex-shrink: 0;
       object-fit: contain;
       display: block;
-      border-radius: 50%;          /* recorte circular — elimina fondo blanco cuadrado */
-      background: transparent;
-      mix-blend-mode: screen;      /* sobre nav oscuro: los tonos cálidos resaltan */
+      border-radius: 50%;
+      outline: 2px solid rgba(255,255,255,0.25);
+      outline-offset: 1px;
     }
-
-    /* En nav claro (transparente, sobre imagen oscura del hero) funciona bien */
-    /* En nav scrolled (casi-negro) screen hace los dots más luminosos = efecto deseado */
 
     .logo-wordmark {
       display: flex;
@@ -193,8 +192,7 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(105deg, rgba(26,21,18,0.72) 0%, rgba(26,21,18,0.35) 55%, rgba(26,21,18,0.15) 100%),
-        radial-gradient(ellipse at 70% 40%, rgba(226,119,95,0.12) 0%, transparent 60%);
+        linear-gradient(105deg, rgba(30,30,30,0.68) 0%, rgba(30,30,30,0.28) 55%, rgba(30,30,30,0.08) 100%);
       animation: heroBreath 10s ease-in-out infinite alternate;
     }
 
@@ -588,7 +586,7 @@
 
     .cat-slide-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(26,21,18,.92) 0%, rgba(26,21,18,.2) 55%, transparent 100%);
+      background: linear-gradient(to top, rgba(45,45,45,.88) 0%, rgba(45,45,45,.18) 55%, transparent 100%);
     }
 
     .cat-slide-badge {
@@ -647,12 +645,12 @@
        CÓMO FUNCIONA
     ════════════════════════════════════ */
     .como {
-      background: var(--verde);
+      background: var(--niebla);
       padding: 100px 8%;
     }
 
-    .como .section-title { color: white; margin-bottom: 8px; }
-    .como .section-sub { color: rgba(255,255,255,0.5); margin-bottom: 70px; }
+    .como .section-title { color: var(--verde); margin-bottom: 8px; }
+    .como .section-sub { color: var(--sub); margin-bottom: 70px; }
 
     .steps-grid {
       display: grid;
@@ -661,20 +659,20 @@
     }
 
     .step {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
+      background: white;
+      border: 1px solid var(--borde);
       padding: 40px 32px;
-      transition: background 0.3s;
+      transition: background 0.3s, box-shadow 0.3s;
     }
 
-    .step:hover { background: rgba(255,255,255,0.07); }
+    .step:hover { background: var(--crema); box-shadow: 0 4px 20px rgba(154,83,83,0.08); }
 
     .step-num {
       font-family: 'Cormorant Garamond', serif;
       font-size: 3.5rem;
       font-weight: 300;
-      color: var(--terra);
-      opacity: 0.4;
+      color: var(--carbon);
+      opacity: 0.35;
       line-height: 1;
       margin-bottom: 24px;
     }
@@ -689,13 +687,13 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.3rem;
       font-weight: 400;
-      color: white;
+      color: var(--verde);
       margin-bottom: 12px;
     }
 
     .step-desc {
       font-size: 0.8rem;
-      color: rgba(255,255,255,0.5);
+      color: var(--sub);
       line-height: 1.75;
     }
 
@@ -830,7 +828,7 @@
        PRODUCTOS DESTACADOS
     ════════════════════════════════════ */
     .productos {
-      background: var(--crema);
+      background: var(--blanco);
       padding: 100px 6%;
     }
 
@@ -1002,7 +1000,7 @@
        CONSULTAS MÉDICAS
     ════════════════════════════════════ */
     .consultas {
-      background: var(--niebla);
+      background: var(--pizarra);
       padding: 100px 8%;
     }
 
@@ -1057,9 +1055,10 @@
       margin-right: 5px;
     }
 
-    .consultas .section-eyebrow { color: var(--carbon); }
-    .consultas .section-title { color: var(--texto); margin-bottom: 20px; }
-    .consultas .section-sub { margin-bottom: 32px; }
+    .consultas .section-eyebrow { color: var(--melocoton); opacity: 0.9; }
+    .consultas .section-title { color: white; margin-bottom: 20px; }
+    .consultas .section-title em { color: var(--melocoton); }   /* Melocotón sobre pizarra = contraste cálido */
+    .consultas .section-sub { color: rgba(255,255,255,0.65); margin-bottom: 32px; }
 
     .consulta-steps {
       list-style: none;
@@ -1073,13 +1072,13 @@
       display: flex;
       gap: 16px;
       font-size: 0.85rem;
-      color: var(--texto);
+      color: rgba(255,255,255,0.85);
     }
 
     .cstep-num {
       width: 28px;
       height: 28px;
-      background: var(--carbon);
+      background: var(--terra);
       color: white;
       border-radius: 50%;
       display: flex;
@@ -1158,7 +1157,7 @@
     }
 
     .vs-nosotros {
-      background: var(--verde);
+      background: var(--carbon);
       border-radius: 8px;
       padding: 12px 15px;
       font-size: 0.78rem;
@@ -1170,7 +1169,7 @@
        CTA FINAL / EMAIL
     ════════════════════════════════════ */
     .cta-final {
-      background: var(--verde);
+      background: var(--terra);
       padding: 120px 8%;
       text-align: center;
       position: relative;
@@ -1185,27 +1184,27 @@
       transform: translate(-50%, -50%);
       width: 600px;
       height: 600px;
-      opacity: 0.04;
+      opacity: 0.08;
       pointer-events: none;
     }
 
-    .cta-final .section-eyebrow { color: var(--pizarra); opacity: 0.7; }
+    .cta-final .section-eyebrow { color: var(--verde); opacity: 0.6; }
 
     .cta-title {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(2.4rem, 5vw, 4rem);
       font-weight: 300;
-      color: white;
+      color: var(--verde);
       line-height: 1.1;
       margin-bottom: 20px;
       position: relative;
     }
 
-    .cta-title em { font-style: italic; color: var(--niebla); }
+    .cta-title em { font-style: italic; color: var(--verde); opacity: 0.85; }
 
     .cta-sub {
       font-size: 0.95rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(26,21,18,0.65);
       max-width: 460px;
       margin: 0 auto 48px;
       line-height: 1.8;
@@ -1218,8 +1217,8 @@
       display: flex;
       max-width: 480px;
       width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(26,21,18,0.15);
       border-radius: 4px;
       overflow: hidden;
     }
@@ -1232,14 +1231,14 @@
       font-family: 'Montserrat', sans-serif;
       font-size: 0.85rem;
       background: transparent;
-      color: white;
+      color: var(--verde);
     }
 
-    .form-row input[type="email"]::placeholder { color: rgba(255,255,255,0.3); }
+    .form-row input[type="email"]::placeholder { color: rgba(26,21,18,0.35); }
 
     .form-row button {
       border: none;
-      background: var(--terra);
+      background: var(--verde);
       color: white;
       padding: 16px 26px;
       font-family: 'Montserrat', sans-serif;
@@ -1252,9 +1251,9 @@
       transition: background 0.2s;
     }
 
-    .form-row button:hover { background: #C45A40; }
+    .form-row button:hover { background: var(--carbon); }
 
-    .form-note { font-size: 0.68rem; color: rgba(255,255,255,0.25); margin-top: 12px; position: relative; }
+    .form-note { font-size: 0.68rem; color: rgba(26,21,18,0.4); margin-top: 12px; position: relative; }
 
     .form-success {
       display: none;
@@ -1344,7 +1343,7 @@
        CONTENIDO / BLOG
     ════════════════════════════════════ */
     .contenido {
-      background: var(--crema);
+      background: var(--niebla);
       padding: 100px 6%;
     }
 
