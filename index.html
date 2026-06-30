@@ -3,6 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // Firefox restaura la posición de scroll de la sesión anterior DESPUÉS del evento load.
+    // history.scrollRestoration no intercepta este mecanismo en Firefox para file://.
+    // Solución: forzar scroll=0 en window load (dispara tras la restauración de Firefox)
+    // y también en beforeunload (para que la próxima restauración parta del top).
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+    window.addEventListener('load', function() { window.scrollTo(0, 0); });
+    window.addEventListener('beforeunload', function() { window.scrollTo(0, 0); });
+  </script>
   <title>Mundo Alergia — Seleccionamos. Tú respiras.</title>
   <meta name="description" content="Tienda curada para personas con alergias. Productos seleccionados con criterio clínico, Club de miembros y consultas con especialistas." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,6 +21,8 @@
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* scroll-behavior: smooth se maneja por JS en clics de anchor — NO aquí,
+       para evitar que el browser scrollee al hash de la URL al cargar la página */
 
     :root {
       --verde:    #1A1512;   /* cálido casi negro — hero, footer */
@@ -24,8 +36,6 @@
       --sub:      #7A5248;
       --borde:    #EEE0D6;
     }
-
-    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Montserrat', sans-serif;
@@ -1768,7 +1778,7 @@
        o página /pages/orientame con form Liquid
   ═══════════════════════════════════════════════════════════ -->
   <!-- ═══ HERO ═══ -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <!-- SHOPIFY: <img src="{{ section.settings.hero_image | image_url: width: 1920 }}" ...> -->
     <!-- Hero image — madre cuidando a su hija -->
     <div class="hero-video" style="background-image:url('https://images.unsplash.com/photo-1551642465-6e7e5b2f10fa?w=1920&q=85&auto=format&fit=crop'); background-size:cover; background-position:center 30%;"></div>
@@ -2733,6 +2743,23 @@
   </footer>
 
   <script>
+    // ── Siempre arrancar desde el top (evita que el navegador restaure scroll a #categorias) ──
+    // (scrollRestoration ya está en <head> — duplicado de seguridad)
+    window.scrollTo(0, 0);
+
+    // ── Smooth scroll solo en clics de anchor (no en carga de página) ──
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        var id = this.getAttribute('href').slice(1);
+        if (!id) { window.scrollTo({ top: 0, behavior: 'smooth' }); e.preventDefault(); return; }
+        var target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
     // ── Nav scroll behavior ──
     const nav = document.getElementById('nav');
     const announce = document.getElementById('announce');
